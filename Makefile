@@ -10,7 +10,7 @@ SLIDE_PDFS := $(SLIDES:.md=.pdf)
 PANDOC_OPTIONS := --standalone
 PANDOC_PDF_OPTIONS := --to=context+tagging -V pdfa=3a
 PANDOC_HTML_OPTIONS := --to html5 --mathml
-PANDOC_SLIDE_OPTIONS := --to=beamer
+PANDOC_SLIDE_OPTIONS := --to=beamer --slide-level=2 # --incremental
 
 .PHONY: all context html slides clean
 
