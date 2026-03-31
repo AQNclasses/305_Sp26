@@ -1,20 +1,4 @@
-# Announcements
-
-- Quiz make-up policy: take on Canvas until the following Wednesday for partial
-credit; email me if you need it re-opened.
-- Resubmissions for HW1 due 2/13
-- Grading HW2 without double penalties for things corrected in HW1
-  - comment on your submission ASAP about who you worked with to avoid points lost
-- Mid-term Friday: about 2x length of quizzes, will have entire class period
-  - One 8.5"x11" single sided sheet of notes allowed (physical copy)
-  - Paper preferred, computer OK
-  - No other resources allowed (automatic zero and possibly fail the course).
-  - Book in DAC reminder!
-    - DAC exam will be taken on computer by default: remember to show your work!
-    - No drawing of recursion trees is explicitly required, but may be one
-      method you use to find a bound
-
-# Last new content: Theorem for finding tight bounds
+# Master Theorem
 
 Imagine we have a recurrence of form:
 
@@ -30,7 +14,26 @@ What are some examples?
 - Binary search: $T(n) = T(n/2)$
 - Max sub-array: $T(n) = 2T(n/2) + \Theta(n)$
 
-First, we define a *critical exponent* $c_{crit} = \log_b(a)$.
+If we have a recurrence in this form, a theorem exists to automatically give us
+bounds on the solution. This theorem was introduced in the paper "A General
+Method for Solving Divide-and-Conquer Recurrences" by Bentley, Haken, and Saxe
+in 1980. The textbook "Introduction to Algorithms" by Cormen, Leiserson, Rivest,
+and Stein introduced the term "master theorem" because it is a universal method
+for solving divide-and-conquer recurrences.
+
+## Step 1
+
+Write down your recurrence relation in the form $T(n) = a T(\frac{n}{b}) + f(n)$
+and identify $a$, $b$, and $f(n)$ for your problem.
+
+## Step 2
+
+Compute the **critical exponent**, defined as $c_{crit} = \log_b(a)$.
+
+## Step 3
+
+Use $c_{crit}$ and $f(n)$ to determine which of the following three cases
+applies. Plug in the values to the given bound; you're done!
 
 Three cases:
 
@@ -66,7 +69,7 @@ Three cases:
 
    b. **Bound:** $T(n) = \Theta(f(n))$
 
-Examples:
+## Examples
 
 1. $T(n) = 8T(\frac{n}{2}) + 1000n^2$
 

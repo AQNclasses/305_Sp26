@@ -1,16 +1,4 @@
-# Announcements
-
-- Grading.... will be fully caught up by tonight
-- Quiz, homework solutions uploaded
-- Still a few people need to finish Quiz 4 and HW 4, will be uploaded by
-tomorrow night
-
-# Review
-
-- Flowchart of algorithm analysis
-
-
-## Parts of an algorithm analysis
+# How to analyze algorithm
 
 1. Problem description: if needed, write down problem to be solved, including
 all assumptions and constraints.

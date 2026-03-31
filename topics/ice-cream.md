@@ -1,13 +1,4 @@
-# 18 February
-
-# Announcements
-
-- HW3 due today, office hours today 3-4pm in KB109
-- HW2: leave comment of who you worked with and I will give points back
-- No quiz this Friday, planning to return and review exam this Friday
-- Time permitting, there will also be a class activity for participation credit on Friday
-
-# Greedy algorithms
+# Greedy algorithms: the Ice Cream Problem
 
 ## Coding problem
 

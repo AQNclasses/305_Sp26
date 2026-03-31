@@ -1,6 +1,4 @@
-# Announcements
-
-# Greedy Algorithms
+# Greedy Algorithms: Scheduling Classes
 
 - Scheduling Classes problem
 - Recursive solution
