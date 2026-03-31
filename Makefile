@@ -1,27 +1,35 @@
-SOURCE_DOCS := $(topics/*.md)
+SOURCE_DOCS := $(wildcard topics/*.md)
+SLIDES := $(wildcard slides/*.md)
 
-EXPORTED_DOCS=\
+EXPORTED_DOCS := \
   $(SOURCE_DOCS:.md=.pdf) \
   $(SOURCE_DOCS:.md=.html)
 
-PANDOC_OPTIONS=--standalone
+SLIDE_PDFS := $(SLIDES:.md=.pdf)
 
-PANDOC_PDF_OPTIONS=--to=context+tagging -V pdfa=3a
-PANDOC_HTML_OPTIONS=--to html5 --mathml
+PANDOC_OPTIONS := --standalone
+PANDOC_PDF_OPTIONS := --to=context+tagging -V pdfa=3a
+PANDOC_HTML_OPTIONS := --to html5 --mathml
+PANDOC_SLIDE_OPTIONS := --to=beamer
 
-%.pdf : %.md
+.PHONY: all context html slides clean
+
+all: $(EXPORTED_DOCS) $(SLIDE_PDFS)
+
+topics/%.pdf : topics/%.md
 	pandoc $(PANDOC_OPTIONS) $(PANDOC_PDF_OPTIONS) -o $@ $<
-	mv $@ pdfs/
 
-%.html : %.md
+topics/%.html : topics/%.md
 	pandoc $(PANDOC_OPTIONS) $(PANDOC_HTML_OPTIONS) -o $@ $<
-	mv $@ html/
+
+slides/%.pdf : slides/%.md
+	pandoc $(PANDOC_OPTIONS) $(PANDOC_SLIDE_OPTIONS) -o $@ $<
 
 context : $(SOURCE_DOCS:.md=.pdf)
 
 html : $(SOURCE_DOCS:.md=.html)
 
-all: $(EXPORTED_DOCS)
+slides : $(SLIDE_PDFS)
 
 clean:
-	rm ($EXPORTED_DOCS)
+	rm -f $(EXPORTED_DOCS) $(SLIDE_PDFS)
