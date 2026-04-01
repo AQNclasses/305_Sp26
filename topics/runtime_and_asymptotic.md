@@ -5,7 +5,7 @@
 - RAM model:
   - single processor, sequential execution
   - constant-time elementary instructions (arithmetic, data movement, control)
-  - runtime cost is uniform (1 time unit) for all simple instructions
+  - runtime cost is uniform (1 time unit) for all simple instructions (arithmetic, calling subroutine, initializing variables, etc)
   - memory is unlimited and "flat" : no hierarchy, accessing a variable in memory takes 1 time unit.
 - Running time of an algorithm is always given in terms of input size (usually N).
   - Input can have other structure, eg: sorted or unsorted, cyclic or acyclic graphs
@@ -34,16 +34,19 @@ Consider a straightforward implementation of insertion sort.
 Here is how to write down the number of operations per line:
 
 ```python
-def insertionSort(arr):
-  for i in range(1, len(arr)):          # n+1
-    key = arr[i]                        # n
-    j = i-1                             # n
-
-    while j >= 0 and key < arr[j]:      # best case: C=2; worst case: C=n
-      arr[j+1] = arr[j]                 # n*1*C
-      j -= 1                            # n*1*C
-    arr[j+1] = key                      # n
+def insertionSort(A, n):
+  for j=2 to n:                         # 1*(n-1) (assume loop is inclusive of n)
+    key = A[j]                          # 1*(n-1)
+    i = j-1                             # 1*(n-1)
+    while i > 0 and A[i] > key:         # best case: C=2; worst case: C=n (why?)
+      A[i+1] = A[i]                     # n*1*C
+      i = i-1                           # n*1*C
+    A[i+1] = key                        # n
 ```
+
+Best case:
+
+Worst case:
 
 ### Example 2
 
