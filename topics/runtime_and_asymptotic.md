@@ -1,8 +1,122 @@
-# Notation
+# Runtime and Asymptotics
+
+## Computational model
+
+- RAM model:
+  - single processor, sequential execution
+  - constant-time elementary instructions (arithmetic, data movement, control)
+  - runtime cost is uniform (1 time unit) for all simple instructions
+  - memory is unlimited and "flat" : no hierarchy, accessing a variable in memory takes 1 time unit.
+- Running time of an algorithm is always given in terms of input size (usually N).
+  - Input can have other structure, eg: sorted or unsorted, cyclic or acyclic graphs
+
+## Complexity
+
+The number of steps the algorithm takes determines its **computational
+complexity**. However, the number of steps an algorithm takes may depend on
+structure of the input (consider sorting an already-sorted list).
+
+There are three cases we usually consider:
+
+- Worst Case complexity: maximum number of steps
+- Best Case complexity: minimum number of steps
+- Average case complexity: average over all possible inputs
+    - will discuss further later in the quarter
+
+Usually we focus on worst-case complexity. Why?
+
+## Computing runtime: Counting!
+
+### Example 1
+
+Consider a straightforward implementation of insertion sort.
+
+Here is how to write down the number of operations per line:
+
+```python
+def insertionSort(arr):
+  for i in range(1, len(arr)):          # n+1
+    key = arr[i]                        # n
+    j = i-1                             # n
+
+    while j >= 0 and key < arr[j]:      # best case: C=2; worst case: C=n
+      arr[j+1] = arr[j]                 # n*1*C
+      j -= 1                            # n*1*C
+    arr[j+1] = key                      # n
+```
+
+### Example 2
+
+```python
+def example(n):
+    j = 0                   # 1 initialize, 1 assignment
+    for i in range(1,n):    # 1 assignment to initialize, one for each increment = n+1
+      j = 1                 # 1*n (cost one, inside for loop)
+      while j <= n:         # 1*n*(iterations of inner loop)
+         j += 1             # 1*n*(iterations of inner loop)
+    return j                # 1: count return
+```
+
+- How many times will inner while loop evaluate for arbitrary `i`?
+- Can estimate `n/2` by inspection
+- Algebra solution:
+  - after $k$ iterations, value of `j` is `2k+1`
+  - Termination condition: `j <= n`
+  - Solve for value of k when loop terminates: `2k+1 <= n` -> `k = (n-1)/2`
+- So inner loop will run $(n-1)/2$ times during *each* iteration of outer loop
+- Total count -> $nc(n-1)/2$
+- What if inner loop instead terminates when $j <= i$??
+  - Can simply multiply max runtime by $n$ (over-estimation)
+  - To get tighter bound, manually compute sum over i
+
+$$
+\sum_{i=1}^n (i-1)/2
+$$
+
+$$
+\to \frac{1}{2} \sum_{i=1}^n (i-1)
+$$
+
+$$
+\to \frac{1}{2} \big((\sum_{i=1}^n i) - n \big)
+$$
+
+### Tips and Tricks
+
+- Arithmetic series finite sum
+  - Example: $1 + 2 + \ldots + n$
+  - Example: $2 + 5 + 8 + 11 + 14 = 40$
+  - Formula: $\frac{n(a_1 + a_n)}{2}$
+- Geometric series sum
+  - $\sum_{i=0}^n a r^i$
+  - Case of $r=1$
+  - Otherwise, sum = $a\frac{1-r^{n+1}}{1-r}$
+- Logarithm rules (+ exponent rules)
+- Don't stress about floor / ceilings
+- Big theta: mostly we care about showing that lower and upper bound have same
+  functional form. To justify, need to justify that there is no situation where we
+  will change the functional form of the runtime expression $T(n)$.
+- Exponents vs. polynomials: $c^N$ will always be asymptotically larger than
+  $N^d$, where $c$ and $d$ are arbitrary positive integers.
+
+# Asymptotics
+
+We care most about how runtime (or space, etc) scales with the size of the
+input.
+
+As $N$ gets bigger, different parts of the runtime function will contribute more
+to others. Example: compare $f(x) = x^2$ and $g(x) = x^4$. When $x$ is small, for example
+$x=1/2$ or $x=1$, we may have $f(x) > g(x)$ or $f(x) = g(x)$. But as $x$ gets
+larger, we can clearly see that $x^2 < x^4$ and this property will not change
+as $x$ increases further.
+
+We will formalize this idea.
 
 ## O-notation
 
-O-notation characterizes an upper bound on the asymptotic behavior of a function.
+O-notation characterizes an **upper bound** on the asymptotic behavior of a function.
+
+Formally: We say that $f(n)$ is $O(g(n))$
 
 O-notation implies that a function grows *no faster* than a certain rate. The rate is determined by
 the highest order term.
@@ -33,82 +147,16 @@ $$
 O(f(n)) \wedge \Omega(f(n)) \iff \Theta(f(n))
 $$
 
+## lowercase asymptotics
+
+The lowercase greek letter is used to indicate a "loose" bound, while upper case
+indicates a "tight" bound.
 
 # Computing runtime
 
 - So far, we've been looking a lot at recurrences and how to analyze recursive
 algorithms.
 - Quick refresh of "non-recursive" runtime analysis
-- Counting!
-
-```python
-def example(n):
-    j = 0                   # 1 initialize, 1 assignment
-    j += 1                  # 1 operation
-    for i in range(1,n):    # 1 assignment to initialize, one for each increment = n+1
-      j = 1                 # 1*n (cost one, inside for loop)
-      while j <= n:         # 1*n*(sum of iterations of inner loop)
-         j += 2             # 1*n*(sum of iterations of inner loop)
-    return n-j              # 2: count return and subtraction
-```
-
-- How many times will inner while loop evaluate for arbitrary `i`?
-- Can estimate `n/2` by inspection
-- Algebra solution:
-  - after $k$ iterations, value of `j` is `2k+1`
-  - Termination condition: `j <= n`
-  - Solve for value of k when loop terminates: `2k+1 <= n` -> `k = (n-1)/2`
-- So inner loop will run $(n-1)/2$ times during *each* iteration of outer loop
-- Total count -> $nc(n-1)/2$
-- What if inner loop instead terminates when $j <= i$??
-  - Can simply multiply max runtime by $n$ (over-estimation)
-  - To get tighter bound, manually compute sum over i
-
-$$
-\sum_{i=1}^n (i-1)/2
-$$
-
-$$
-\to \frac{1}{2} \sum_{i=1}^n (i-1)
-$$
-
-$$
-\to \frac{1}{2} \big((\sum_{i=1}^n i) - n \big)
-$$
-
-# Tips and Tricks
-
-- Arithmetic series finite sum
-  - Example: $1 + 2 + \ldots + n$
-  - Example: $2 + 5 + 8 + 11 + 14 = 40$
-  - Formula: $\frac{n(a_1 + a_n)}{2}$
-- Geometric series sum
-  - $\sum_{i=0}^n a r^i$
-  - Case of $r=1$
-  - Otherwise, sum = $a\frac{1-r^{n+1}}{1-r}$
-- Logarithm rules (+ exponent rules)
-- Don't stress about floor / ceilings
-- Big theta: mostly we care about showing that lower and upper bound have same
-  functional form. To justify, need to justify that there is no situation where we
-  will change the functional form of the runtime expression $T(n)$.
-
-# Example 1
-
-Consider a straightforward implementation of insertion sort.
-
-Here is how to write down the number of operations per line:
-
-```python
-def insertionSort(arr):
-  for i in range(1, len(arr)):          # n+1
-    key = arr[i]                        # n
-    j = i-1                             # n
-
-    while j >= 0 and key < arr[j]:      # best case: C=2; worst case: C=n
-      arr[j+1] = arr[j]                 # n*1*C
-      j -= 1                            # n*1*C
-    arr[j+1] = key                      # n
-```
 
 # Root method
 

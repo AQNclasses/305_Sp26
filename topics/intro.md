@@ -1,7 +1,6 @@
 
 # What is an Algorithm?
 
-- not a beat that Al Gore came up with!
 - Origin of word: 9th century Persian scholar Muhammad ibn Musa al-Khwarizmi
   - also the origin of the word "algebra", the decimal system for representing numbers, and invented the number zero (also independently defined in India)
   - his name was combined with the Greek arithmos (number) and algos (pain).
