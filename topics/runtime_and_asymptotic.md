@@ -27,26 +27,39 @@ Usually we focus on worst-case complexity. Why?
 
 ## Computing runtime: Counting!
 
+Assumptions:
+
+1. "Simple" operations take constant time (doesn't depend on size of input)
+2. The line defining a loop runs one more time than the statements inside the loop (has to check for ending condition)
+
+
 ### Example 1
 
 Consider a straightforward implementation of insertion sort.
 
-Here is how to write down the number of operations per line:
+Let `ti` be a variable representing the number of times the inner while loop
+executes for a given value of `i`.
+
 
 ```python
 def insertionSort(A, n):
-  for j=2 to n:                         # 1*(n-1) (assume loop is inclusive of n)
-    key = A[j]                          # 1*(n-1)
-    i = j-1                             # 1*(n-1)
-    while i > 0 and A[i] > key:         # best case: C=2; worst case: C=n (why?)
-      A[i+1] = A[i]                     # n*1*C
-      i = i-1                           # n*1*C
-    A[i+1] = key                        # n
+  for j=2 to n:                         # c1*n (assume loop is inclusive of n)
+    key = A[j]                          # c2*(n-1)
+    i = j-1                             # c3*(n-1)
+    while i > 0 and A[i] > key:         # c4*(sum ti from 2 to n)
+      A[i+1] = A[i]                     # c5*(sum ti-1 from 2 to n)
+      i = i-1                           # c6*(sum ti-1 from 2 to n)
+    A[i+1] = key                        # c7*(n-1)
 ```
 
-Best case:
+Best case: already sorted list. How many times will the inner loop run for each `i`?
+In the best case, only twice (check that elements i and `i+1` are sorted, then
+check loop termination condition).
 
-Worst case:
+Worst case: reverse sorted list. Same question.
+
+How would we try to prove correctness? (loop invariants)
+
 
 ### Example 2
 
@@ -96,9 +109,6 @@ $$
   - Otherwise, sum = $a\frac{1-r^{n+1}}{1-r}$
 - Logarithm rules (+ exponent rules)
 - Don't stress about floor / ceilings
-- Big theta: mostly we care about showing that lower and upper bound have same
-  functional form. To justify, need to justify that there is no situation where we
-  will change the functional form of the runtime expression $T(n)$.
 - Exponents vs. polynomials: $c^N$ will always be asymptotically larger than
   $N^d$, where $c$ and $d$ are arbitrary positive integers.
 
@@ -113,13 +123,16 @@ $x=1/2$ or $x=1$, we may have $f(x) > g(x)$ or $f(x) = g(x)$. But as $x$ gets
 larger, we can clearly see that $x^2 < x^4$ and this property will not change
 as $x$ increases further.
 
-We will formalize this idea.
+We will formalize this idea. This allows us to say that two algorithms are
+**asymptotically** equally efficient, or that one is asymptotically more
+efficient than the other.
 
 ## O-notation
 
 O-notation characterizes an **upper bound** on the asymptotic behavior of a function.
 
-Formally: We say that $f(n)$ is $O(g(n))$
+Formally: We say that $f(n)$ is $O(g(n))$ if $f(x) \leq M g(x)$ for all $x >
+x_0$, for some $x_0$ and $M$.
 
 O-notation implies that a function grows *no faster* than a certain rate. The rate is determined by
 the highest order term.
