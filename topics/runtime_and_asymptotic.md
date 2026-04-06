@@ -69,7 +69,7 @@ def example(n):
     for i in range(1,n):    # 1 assignment to initialize, one for each increment = n+1
       j = 1                 # 1*n (cost one, inside for loop)
       while j <= n:         # 1*n*(iterations of inner loop)
-         j += 1             # 1*n*(iterations of inner loop)
+         j += 2             # 1*n*(iterations of inner loop)
     return j                # 1: count return
 ```
 
