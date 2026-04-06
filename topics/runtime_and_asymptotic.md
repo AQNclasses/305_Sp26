@@ -82,7 +82,7 @@ def example(n):
 - So inner loop will run $(n-1)/2$ times during *each* iteration of outer loop
 - Total count -> $nc(n-1)/2$
 - What if inner loop instead terminates when $j <= i$??
-  - Can simply multiply max runtime by $n$ (over-estimation)
+  - Can multiply max runtime by $n$ (over-estimation)
   - To get tighter bound, manually compute sum over i
 
 $$
@@ -99,6 +99,8 @@ $$
 
 ### Tips and Tricks
 
+`https://discrete.openmathbooks.org` is a great resource in general.
+
 - Arithmetic series finite sum
   - Example: $1 + 2 + \ldots + n$
   - Example: $2 + 5 + 8 + 11 + 14 = 40$
@@ -111,6 +113,7 @@ $$
 - Don't stress about floor / ceilings
 - Exponents vs. polynomials: $c^N$ will always be asymptotically larger than
   $N^d$, where $c$ and $d$ are arbitrary positive integers.
+
 
 # Asymptotics
 
@@ -130,21 +133,44 @@ efficient than the other.
 ## O-notation
 
 O-notation characterizes an **upper bound** on the asymptotic behavior of a function.
+We usually say this out loud as "big-Oh notation". This is shorthand for a
+formal definition of classes of functions with bounded growth rates.
 
-Formally: We say that $f(n)$ is $O(g(n))$ if $f(x) \leq M g(x)$ for all $x >
-x_0$, for some $x_0$ and $M$.
+Formally, for a function $g(n)$, we define $O(g(n))$ as the set of functions
+asymptotically bounded by $g(n)$. We can write this set as
+
+$$
+\O(g(n)) = \{ f(n) : 0 \leq f(n) \leq c g(n), n \geq n_0 \}
+$$
+
+for some positive constants $c$ and $n_0$.
+
+This means that there is some input size $n_0$ beyond which $g(n)$ is a strict
+upper bound for $f(n)$.
 
 O-notation implies that a function grows *no faster* than a certain rate. The rate is determined by
 the highest order term.
 
 For example, $f(n) = 7n^3 + 100n^2 - 20n + 6$ is $O(n^3)$.
 
-The function $f(n)$ is also $O(n^5)$, and in general is $O(n^c)$ for any constant $c \geq 3$.
+Faster growing functions are also valid upper bounds, for example the function $f(n)$ is also
+$O(n^5)$. However, we say that $O(n^5)$ is not a *tight* upper bound while
+$O(n^3)$ is a *tight* upper bound, as you can prove there is no polynomial
+smaller than $n^3$ that can serve as an upper bound for $f(n)$.
 
 ## Ω-notation
 
-Ω-notation characterizes a lower bound on the asymptotic behavior of a function, implying that a function grows
+Ω-notation (big omega) characterizes a **lower bound** on the asymptotic behavior of a function, implying that a function grows
 *at least as fast* as a certain rate. Again, this rate is based on the highest-order term.
+
+Formally, for a function $g(n)$, we define $\Omega(g(n))$ as the set of
+functions lower-bounded by $g(n)$. We write this as
+
+$$
+\Omega(g(n)) = \{ f(n) : 0 \leq c g(n) \leq f(n), n \geq n_0 \}
+$$
+
+for some positive constants $c$ and $n_0$.
 
 Using the same function $f(n) = 7n^3 + 100n^2 - 20n + 6$, $f(n)$ is $\Omega(n^3)$.
 
@@ -152,7 +178,7 @@ The function $f(n)$ is also $\Omega(n^2)$, $\Omega(n)$, and $\Omega(n^c)$ for an
 
 ## Θ-notation
 
-$\Theta$-notation characterizes a *tight bound* on the asymptotic behavior of the function: it states
+$\Theta$-notation (big theta) characterizes a *tight upper and lower bound* on the asymptotic behavior of the function: it states
 that a function grows at precisely a certain rate, based on the highest-order term (in the limit of large $n$).
 
 Our example function $f(n) = 7n^3 + 100n^2 - 20n + 6$ is $\Theta(n^3)$, and is $\Theta(n^c)$ only for $c=3$.
@@ -168,35 +194,8 @@ $$
 The lowercase greek letter is used to indicate a "loose" bound, while upper case
 indicates a "tight" bound.
 
-# Computing runtime
+| Variable | Name | Corresponding Operator |
+| -------- | ---- | ---------------------- |
+| O | big O | \leq |
 
-- So far, we've been looking a lot at recurrences and how to analyze recursive
-algorithms.
-- Quick refresh of "non-recursive" runtime analysis
-
-# Root method
-
-
-- We can solve "second-order" recurrence relations by finding roots of characteristic equation
-- Method for generating solutions to recurrence relations of form $f_n + \alpha f_{n-1} + \beta f_{n-2} = 0$
-- We guess that $f_n = r^n$, then factor and solve for $r$
-- Example:
-
-$$
-\begin{align*}
-& G_n = G_{n-1} + 6 G_{n-2} \\
-\to & r^n - r^{n-1} - 6r^{n-2} = 0 \\
-\to & r^{n-2} ( r^2 - r - 6 ) = r^{n-2} (r-3) (r+2)
-\end{align*}
-$$
-
-Solutions $r=3$ and $r=-2$ are both valid, depending on initial conditions (check using original recurrence).
-
-Solutions of $f_n + \alpha f_{n-1} + \beta f_{n-2} = 0$ can be found using roots
-$r_1$, $r_2$ of the characteristic equation $x^2 + \alpha x + \beta = 0$, and in general solutions
-take the form $f_n = a r_1^n + b r_2^n$.
-
-Further reading [here](https://discrete.openmathbooks.org/dmoi2/sec_recurrence.html) and [here](https://math.stackexchange.com/a/167197).
-
-`https://discrete.openmathbooks.org` is a great resource in general.
 
