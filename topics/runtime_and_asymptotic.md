@@ -203,12 +203,22 @@ $$
 The lowercase greek letter is used to indicate a "loose" bound, while upper case
 indicates a "tight" bound.
 
+For example, for big-O vs little-o notation, compare the two set definitions:
+
+```math
+O(g(n)) = \{ f(n) : 0 \leq f(n) \leq c g(n), \forall n \geq n_0 \}
+```
+
+```math
+o(g(n)) = \{ f(n) : 0 \leq f(n) < c g(n), \forall n \geq n_0 \}
+```
+
 | Variable | Name | Corresponding Operator |
 | -------- | ---- | ---------------------- |
 | O | big O | $\leq$ |
 | o | little O | $<$ |
 | $\Omega$ | big omega | $\geq$ |
 | $\omega$ | little omega | $>$ |
-| $\Theta$ | big theta | $\approx |
+| $\Theta$ | big theta | $\approx$ |
 
 Does "little theta" make sense? Why or why not?
