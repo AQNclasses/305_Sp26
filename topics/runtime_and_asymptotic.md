@@ -181,6 +181,15 @@ The function $f(n)$ is also $\Omega(n^2)$, $\Omega(n)$, and $\Omega(n^c)$ for an
 $\Theta$-notation (big theta) characterizes a *tight upper and lower bound* on the asymptotic behavior of the function: it states
 that a function grows at precisely a certain rate, based on the highest-order term (in the limit of large $n$).
 
+Formally, we write $\Theta(g(n))$ as the set of functions bounded above and
+below by $g(n)$:
+
+$$
+\Theta(g(n)) = {f(n): 0 \leq c_1 g(n) \leq f(n) \leq c_2 g(n), \forall n \geq n_0}
+$$
+
+for positive constants $c_1$, $c_2$, and $n_0$.
+
 Our example function $f(n) = 7n^3 + 100n^2 - 20n + 6$ is $\Theta(n^3)$, and is $\Theta(n^c)$ only for $c=3$.
 
 The logical relationship between the notations is:
@@ -196,6 +205,10 @@ indicates a "tight" bound.
 
 | Variable | Name | Corresponding Operator |
 | -------- | ---- | ---------------------- |
-| O | big O | \leq |
+| O | big O | $\leq$ |
+| o | little O | $<$ |
+| $\Omega$ | big omega | $\geq$ |
+| $\omega$ | little omega | $>$ |
+| $\Theta$ | big theta | $\approx |
 
-
+Does "little theta" make sense? Why or why not?
