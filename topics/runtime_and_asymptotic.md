@@ -140,7 +140,7 @@ Formally, for a function $g(n)$, we define $O(g(n))$ as the set of functions
 asymptotically bounded by $g(n)$. We can write this set as
 
 $$
-\O(g(n)) = \{ f(n) : 0 \leq f(n) \leq c g(n), n \geq n_0 \}
+O(g(n)) = \left{ f(n) : 0 \leq f(n) \leq c g(n), n \geq n_0 \right}
 $$
 
 for some positive constants $c$ and $n_0$.
