@@ -222,3 +222,11 @@ o(g(n)) = \{ f(n) : 0 \leq f(n) < c g(n), \forall n \geq n_0 \}
 | $\Theta$ | big theta | $\approx$ |
 
 Does "little theta" make sense? Why or why not?
+
+## Challenge questions
+
+1. If $f(n) = \Theta(g(n))$ and $g(n) = \Theta(h(n))$, then $h(n) =
+\Theta(f(n))$. True or false? Why?
+
+2. If $f(n) = O(g(n))$ and $g(n) = O(h(n))$, then $h(n) = \Omega(f(n))$. True or
+false? Why?
