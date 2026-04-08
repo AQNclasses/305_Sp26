@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>ch1</title>
+  <title>how_to_analyze</title>
   <style>
     /* Default styles provided by pandoc.
     ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -171,96 +171,26 @@
   </style>
 </head>
 <body>
-<h1 id="class-norms">Class Norms</h1>
-<ul>
-<li>We are transforming our brains together</li>
-<li>Requires some trust and vulnerability</li>
-<li>“See something say something”</li>
-<li>“What is said here stays here, what is learned here leaves
-here”</li>
-</ul>
-<h1 id="recursion-and-induction">Recursion and Induction</h1>
-<p>“The control of a large force is the same principle as the control of
-a few men: it is merely a question of deviding up their numbers” - Sun
-Zi, Art of War, 400CE</p>
-<p>“To understand recursion, one must first understand recursion.” -
-Abraham Lincoln</p>
-<ul>
-<li>Common strategy for algorithms is “divide and conquer,”
-intentionally splitting a problem into smaller sub-problems.</li>
-<li>This is a certain type of recursion, described loosely as:
-<ul>
-<li>If the given instance of the problem can be solved directly, do
-it.</li>
-<li>Otherwise, reduce it to one or more simpler instances of the
-<strong>same</strong> problem.</li>
-</ul></li>
-</ul>
-<p>For example, instead of thinking of cleaning your entire apartment,
-often we start by saying “I will just clean my bedroom floor / bathroom
-counter / kitchen sink.” By completing enough smaller problems, we can
-solve the large problem.</p>
-<h2 id="examples">Examples</h2>
-<h3 id="peasant-multiplication">Peasant Multiplication</h3>
-<p>x*y =</p>
+<h1 id="how-to-analyze-algorithm">How to analyze algorithm</h1>
 <ol type="1">
-<li>0 if x=0</li>
-<li>floor(x/2)*(y+y) if x is even</li>
-<li>floor(x/2)*(y+y) + y if x is odd</li>
+<li>Problem description: if needed, write down problem to be solved,
+including all assumptions and constraints.</li>
+<li>Algorithm description: concise pseudocode
+<ul>
+<li>Aiming for no more and no less detail than required</li>
+</ul></li>
+<li>Proof of Correctness
+<ul>
+<li>reduction to known problem</li>
+<li>induction</li>
+<li>direct proof</li>
+<li>proof by contradiction</li>
+</ul></li>
+<li>Analysis of resource usage
+<ul>
+<li>Runtime: exact and asymptotic</li>
+<li>Sometimes: space</li>
+</ul></li>
 </ol>
-<p>Can also be expressed algorithmically as:</p>
-<pre><code>PeasantMultiply(x, y):
-
-if x=0:
-  return 0
-else
-  xNext = x // 2
-  yNext = y+y
-  prod = PeasantMultiply(xNext, yNext)
-  if x is odd:
-    prod = prod + y
-  return prod</code></pre>
-<p>We can imagine the recursive call being done by us, or by someone
-else, even a magical being.</p>
-<p>We will call this hypothetical magical being <em>the recursion
-fairy</em>.</p>
-<p>Once we have defined the recursive call and the base case, we stop
-and let the recursion fairy handle the rest!</p>
-<h3 id="example-tower-of-hanoi">Example: Tower of Hanoi</h3>
-<p>Definition: ask audience to describe problem</p>
-<p>Fun fact: puzzle was developed by a French mathematician at the same
-time as the original French invasion and colonization of Hanoi, and the
-establishment of French Indochina.</p>
-<p>How to approach the problem?</p>
-<ul>
-<li>Can’t solve until largest (nth) disk is moved</li>
-<li>So first, we must move all (n-1) smaller disks to the spare
-peg.</li>
-<li>Then, move largest disk to the destination.</li>
-<li>Now, all we have to figure out is….</li>
-</ul>
-<p><strong>No!</strong> We are done!</p>
-<p>Test with n=0, n=1, n=2, n=3</p>
-<p>Can write recursive algorithm:</p>
-<pre><code>Hanoi(n, src, dst, tmp):
-
-if n &gt; 0:
-  Hanoi(n-1), src, tmp, dst)
-  move disk n from src to dst
-  Hanoi(n-1, tmp, dst, src)</code></pre>
-<h2 id="how-to-analyze">How to analyze?</h2>
-<p>Let T(n) denote the number of moves required to transfer <em>n</em>
-disks.</p>
-<p>We have:</p>
-<ul>
-<li>T(0) = 0</li>
-<li>T(n) = 2T(n-1)+1</li>
-</ul>
-<p>Compute first several values of T(n): 0, 1, 3, 7, 15, 31, 63…</p>
-<p>Leads us to guess that
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mn>2</mn><mi>n</mi></msup><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">T(n) = 2^n - 1</annotation></semantics></math>,
-which happens to be correct.</p>
-<h2 id="if-time-recursion-trees-and-merge-sort">If time: Recursion trees
-and merge sort</h2>
 </body>
 </html>

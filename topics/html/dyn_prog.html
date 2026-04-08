@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
@@ -7,10 +7,10 @@
   <meta name="author" content="Alexandra Nilles" />
   <title>Dynamic Programming Lecture Notes</title>
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     html {
-      line-height: 1.5;
-      font-family: Georgia, serif;
-      font-size: 20px;
       color: #1a1a1a;
       background-color: #fdfdfd;
     }
@@ -29,13 +29,16 @@
     @media (max-width: 600px) {
       body {
         font-size: 0.9em;
-        padding: 1em;
+        padding: 12px;
       }
       h1 {
         font-size: 1.8em;
       }
     }
     @media print {
+      html {
+        background-color: white;
+      }
       body {
         background-color: transparent;
         color: black;
@@ -59,6 +62,10 @@
       color: #1a1a1a;
     }
     img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
       max-width: 100%;
     }
     h1, h2, h3, h4, h5, h6 {
@@ -85,9 +92,11 @@
       color: #606060;
     }
     code {
-      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
       font-size: 85%;
       margin: 0;
+      hyphens: manual;
     }
     pre {
       margin: 1em 0;
@@ -103,8 +112,8 @@
      overflow: visible;
     }
     hr {
-      background-color: #1a1a1a;
       border: none;
+      border-top: 1px solid #1a1a1a;
       height: 1px;
       margin: 1em 0;
     }
@@ -147,12 +156,21 @@
     #TOC a:not(:hover) {
       text-decoration: none;
     }
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -224,36 +242,11 @@
 <p class="author">Alexandra Nilles</p>
 <p class="date">Winter 2025</p>
 </header>
-<h1 id="january-2025">21 January 2025</h1>
-<h2 id="admin">Admin</h2>
-<ul>
-<li>HW 1 due tonight 10pm
-<ul>
-<li>Upload on Canvas</li>
-<li>If handwritten, use scanning app or scanner in library, computer
-labs</li>
-<li>Submission is PDF only</li>
-</ul></li>
-<li>Quiz Friday
-<ul>
-<li>Credit for attempts</li>
-<li>30 minutes given, aim for 15 mins</li>
-<li>handwritten / handtyped solutions</li>
-</ul></li>
-</ul>
-<h2 id="making-the-best-of-it-efficient-backtracking">Making the Best of
-It: Efficient Backtracking?</h2>
-<ul>
-<li>(Show schedule)</li>
-<li>Recall we started with counting and recurrences to find our resource
-usage function
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(n)</annotation></semantics></math>
-<ul>
-<li>Counting for imperative code</li>
-<li>Recurrences for recursive code</li>
-</ul></li>
-<li>Example: Fibonnaci numbers</li>
-</ul>
+<h1
+id="making-the-best-of-it-efficient-backtracking-with-dynamic-programming">Making
+the Best of It: Efficient Backtracking with Dynamic Programming</h1>
+<h2 id="example-1">Example 1</h2>
+<p>Consider the Fibonnaci numbers.</p>
 <!--
 # conTeXt for accessible PDF
 \startformula
@@ -265,7 +258,7 @@ F_n =
  \stopmathcases
 \stopformula
 -->
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>n</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left"><mn>0</mn></mtd><mtd columnalign="left"><mi>n</mi><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left"><mn>1</mn></mtd><mtd columnalign="left"><mi>n</mi><mo>=</mo><mn>1</mn></mtd></mtr><mtr><mtd columnalign="left"><msub><mi>F</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>F</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msub></mtd><mtd columnalign="left"><mi>o</mi><mi>t</mi><mi>h</mi><mi>e</mi><mi>r</mi><mi>w</mi><mi>i</mi><mi>s</mi><mi>e</mi></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>n</mi></msub><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><mi>n</mi><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mn>1</mn></mtd><mtd columnalign="left" style="text-align: left"><mi>n</mi><mo>=</mo><mn>1</mn></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><msub><mi>F</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>F</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left"><mi>o</mi><mi>t</mi><mi>h</mi><mi>e</mi><mi>r</mi><mi>w</mi><mi>i</mi><mi>s</mi><mi>e</mi></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
 F_n = \begin{cases}
 0 &amp; n = 0 \\
 1 &amp; n = 1 \\
@@ -283,10 +276,10 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> RecFib(n<span class="op">-</span><span class="dv">1</span>) <span class="op">+</span> RecFib(n<span class="op">-</span><span class="dv">2</span>)</span></code></pre></div>
 <p>Let
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(n)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">T(n)</annotation></semantics></math>
 be the number of calls to <code>RecFib</code>. Then, we have the
 recurrence</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right"><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left"><mo>=</mo><mn>1</mn><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right"><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left"><mo>=</mo><mn>1</mn><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right"><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left"><mo>=</mo><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mn>1</mn><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>1</mn><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mn>1</mn><mo>,</mo></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right; padding-right: 0"><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left; padding-left: 0"><mo>=</mo><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>2</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>1</mn><mo>,</mo></mtd></mtr></mtable><annotation encoding="application/x-tex">
 \begin{align*}
 T(0) &amp; = 1, \\
 T(1) &amp; = 1, \\
@@ -296,72 +289,36 @@ T(n) &amp; = T(n-1) + T(n-2) + 1,
 <ul>
 <li>Write out values of T(n): 1, 1, 3, 5, 9, …</li>
 <li>Progressing like the fibonacci numbers. Guess general form
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mi>A</mi><msub><mover><mi>F</mi><mo accent="true">̇</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>+</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">T(n) = A \dot F_{n+1} + B</annotation></semantics></math></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>A</mi><msub><mover><mi>F</mi><mo accent="true">̇</mo></mover><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>+</mo><mi>B</mi></mrow><annotation encoding="application/x-tex">T(n) = A \dot F_{n+1} + B</annotation></semantics></math></li>
 <li>Solve to find
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>2</mn><msub><mi>F</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">T(n) = 2 F_{n+1} - 1</annotation></semantics></math></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>2</mn><msub><mi>F</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">T(n) = 2 F_{n+1} - 1</annotation></semantics></math></li>
 <li>So our recursive algorithm takes about twice as many operations as
 counting by ones to
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>F</mi><mrow><mi>n</mi><mo>+</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">F_{n+1}</annotation></semantics></math>
 :(</li>
 <li>Even worse, resource function
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(n)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">T(n)</annotation></semantics></math>
 growth is exponential in
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.</li>
-<li>How to show?</li>
+<li>How to show? See <a
+href="runtime_and_asymptotic.md#root-method">here</a>.</li>
 </ul>
-<h2
-id="sidebar-solving-recurrence-relations-with-roots-of-characteristic-equation">Sidebar:
-Solving Recurrence Relations with roots of characteristic equation</h2>
-<ul>
-<li>Method for generating solutions to recurrence relations of form
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>n</mi></msub><mo>+</mo><mi>α</mi><msub><mi>f</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><mi>β</mi><msub><mi>f</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f_n + \alpha f_{n-1} + \beta f_{n-2} = 0</annotation></semantics></math></li>
-<li>We guess that
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>n</mi></msub><mo>=</mo><msup><mi>r</mi><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">f_n = r^n</annotation></semantics></math>,
-then factor and solve for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math></li>
-<li>Example:</li>
-</ul>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right"></mtd><mtd columnalign="left"><msub><mi>G</mi><mi>n</mi></msub><mo>=</mo><msub><mi>G</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><mn>6</mn><msub><mi>G</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msub></mtd></mtr><mtr><mtd columnalign="right"><mo>→</mo></mtd><mtd columnalign="left"><msup><mi>r</mi><mi>n</mi></msup><mo>−</mo><msup><mi>r</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msup><mo>−</mo><mn>6</mn><msup><mi>r</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msup><mo>=</mo><mn>0</mn></mtd></mtr><mtr><mtd columnalign="right"><mo>→</mo></mtd><mtd columnalign="left"><msup><mi>r</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>r</mi><mn>2</mn></msup><mo>−</mo><mi>r</mi><mo>−</mo><mn>6</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mi>r</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo>−</mo><mn>3</mn><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo>+</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
-\begin{align*}
-&amp; G_n = G_{n-1} + 6 G_{n-2} \\
-\to &amp; r^n - r^{n-1} - 6r^{n-2} = 0 \\
-\to &amp; r^{n-2} ( r^2 - r - 6 ) = r^{n-2} (r-3) (r+2)
-\end{align*}
-</annotation></semantics></math></p>
-<p>Solutions
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">r=3</annotation></semantics></math>
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">r=-2</annotation></semantics></math>
-are both valid, depending on initial conditions (check using original
-recurrence).</p>
-<p>Solutions of
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>n</mi></msub><mo>+</mo><mi>α</mi><msub><mi>f</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><mi>β</mi><msub><mi>f</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msub><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">f_n + \alpha f_{n-1} + \beta f_{n-2} = 0</annotation></semantics></math>
-can be found using roots
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mn>1</mn></msub><annotation encoding="application/x-tex">r_1</annotation></semantics></math>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>r</mi><mn>2</mn></msub><annotation encoding="application/x-tex">r_2</annotation></semantics></math>
-of the characteristic equation
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>+</mo><mi>α</mi><mi>x</mi><mo>+</mo><mi>β</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x^2 + \alpha x + \beta = 0</annotation></semantics></math>,
-and in general solutions take the form
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>f</mi><mi>n</mi></msub><mo>=</mo><mi>a</mi><msubsup><mi>r</mi><mn>1</mn><mi>n</mi></msubsup><mo>+</mo><mi>b</mi><msubsup><mi>r</mi><mn>2</mn><mi>n</mi></msubsup></mrow><annotation encoding="application/x-tex">f_n = a r_1^n + b r_2^n</annotation></semantics></math>.</p>
-<p>Further reading <a
-href="https://discrete.openmathbooks.org/dmoi2/sec_recurrence.html">here</a>
-and <a href="https://math.stackexchange.com/a/167197">here</a>.</p>
-<p><code>https://discrete.openmathbooks.org</code> is a great resource
-in general.</p>
-<h2 id="back-to-fibonacci">Back to Fibonacci</h2>
+<p>Considering our original recurrence</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>n</mi></msub><mo>=</mo><msub><mi>F</mi><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>F</mi><mrow><mi>n</mi><mo>−</mo><mn>2</mn></mrow></msub></mrow><annotation encoding="application/x-tex">
 F_n = F_{n-1} + F_{n-2}
 </annotation></semantics></math></p>
 <p>implies the characteristic equation
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>−</mo><mi>x</mi><mo>−</mo><mn>1</mn><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">x^2 - x - 1 = 0</annotation></semantics></math>,
 with roots</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mfrac><mrow><mn>1</mn><mo>±</mo><msqrt><mn>5</mn></msqrt></mrow><mn>2</mn></mfrac></mrow><annotation encoding="application/x-tex">
-r = \frac{1 \pm \sqrt{5}}{2}
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>r</mi><mo>=</mo><mfrac><mrow><mn>1</mn><mo>±</mo><msqrt><mn>5</mn></msqrt></mrow><mn>2</mn></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+r = \frac{1 \pm \sqrt{5}}{2}.
 </annotation></semantics></math></p>
 <p>The positive root gives the solution
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>F</mi><mi>n</mi></msub><mo>≈</mo><msup><mn>1.618</mn><mi>n</mi></msup></mrow><annotation encoding="application/x-tex">F_n \approx 1.618^n</annotation></semantics></math>
-(golden ratio!).</p>
-<h2 id="memo-ization">Memo-ization</h2>
+(golden ratio!). Since this value is larger than one, a naive recursive
+algorithm would run in time exponential in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>.</p>
+<h3 id="memo-ization">Memo-ization</h3>
 <p>Define a hash map <code>F</code> with entries <code>F[n]</code>.</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>F <span class="op">=</span> {}</span>
@@ -403,21 +360,21 @@ efficient approach from the start, this is a much more general technique
 for optimizing recursive algorithms. Often, especially when working with
 specialized data structures (graphs, heaps, etc.) it is easier to define
 an algorithm recursively first.</p>
-<h2 id="text-segmentation">Text Segmentation</h2>
+<h2 id="example-2">Example 2</h2>
 <p>Recall the text segmentation problem where we are given a string
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mrow><mo stretchy="true" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">A[1..n]</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">A[1..n]</annotation></semantics></math>
 and a constant-time boolean subroutine <code>isWord</code>.</p>
 <p>We wish to decide whether the input
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math>
 can be partitioned into a sequence of words.</p>
 <p>We defined a function <code>Splittable(i)</code> that returns True if
 and only if the suffix
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">A[i..n]</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">A[i..n]</annotation></semantics></math>
 can be partitioned into a sequence of words.</p>
 <p>Then, we can solve the problem by computing
 <code>Splittable(1)</code>.</p>
 <p>We can write down the recurrence as</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>p</mi><mi>l</mi><mi>i</mi><mi>t</mi><mi>t</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left"><mi>T</mi><mi>r</mi><mi>u</mi><mi>e</mi></mtd><mtd columnalign="left"><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mrow><mi>i</mi><mo>&gt;</mo><mi>n</mi></mrow></mtd></mtr><mtr><mtd columnalign="left"><munderover><mo>∨</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>i</mi><mi>s</mi><mi>W</mi><mi>o</mi><mi>r</mi><mi>d</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>∧</mo><mi>S</mi><mi>p</mi><mi>l</mi><mi>i</mi><mi>t</mi><mi>t</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>+</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left"><mtext mathvariant="normal">otherwise</mtext></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mi>p</mi><mi>l</mi><mi>i</mi><mi>t</mi><mi>t</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mi>T</mi><mi>r</mi><mi>u</mi><mi>e</mi></mtd><mtd columnalign="left" style="text-align: left"><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mrow><mi>i</mi><mo>&gt;</mo><mi>n</mi></mrow></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><msubsup><mo>∨</mo><mrow><mi>j</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></msubsup><mi>i</mi><mi>s</mi><mi>W</mi><mi>o</mi><mi>r</mi><mi>d</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mi>S</mi><mi>p</mi><mi>l</mi><mi>i</mi><mi>t</mi><mi>t</mi><mi>a</mi><mi>b</mi><mi>l</mi><mi>e</mi><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
 Splittable(i) = \begin{cases}
 True &amp; \text{if $i &gt; n$} \\
 \vee_{j=1}^n isWord(i,j) \wedge Splittable(j+1) &amp; \text{otherwise}
@@ -425,7 +382,7 @@ True &amp; \text{if $i &gt; n$} \\
 </annotation></semantics></math></p>
 <p>but this recurrence, translated directly into a recursive function,
 runs in
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mn>2</mn><mi>n</mi></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">O(2^n)</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mn>2</mn><mi>n</mi></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(2^n)</annotation></semantics></math>
 time in the worst case.</p>
 <p>Is this reasonable?</p>
 <ul>
@@ -435,10 +392,332 @@ time in the worst case.</p>
 <p>What does this imply about how we should memoize the algorithm?</p>
 <ul>
 <li>We want to build up solutions from the end of the input array to the
-beginning, because computing <code>Solvable(i)</code></li>
-<li>depends on results for <code>Solvable(j)</code> for all valid
+beginning, because computing <code>Splittable(i)</code></li>
+<li>depends on results for <code>Splittable(j)</code> for all valid
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi><mo>&gt;</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">j &gt; i</annotation></semantics></math>.</li>
 </ul>
-<h2 id="edit-distance">Edit Distance</h2>
+<h2 id="example-3">Example 3</h2>
+<p>Problem: Independent Set</p>
+<p>Definition of independent set of a graph: subset of vertices with no
+edges between them.</p>
+<p>Finding maximum size independent set is a canonical NP-hard
+problem.</p>
+<p>But when the input graph is a tree with
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+vertices, we can compute the largest independent set in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math>
+time.</p>
+<p>Assume we are given a tree T, with a root.</p>
+<p>For any node v in T, let MIS(v) denote the size of the largest
+independent set in the subtree rooted at v.</p>
+<p>There are two cases for the independent set of this tree: includes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>
+or doesn’t.</p>
+<p>If the independent set includes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>,
+it cannot include any of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>’s
+direct children, but will include the independent sets of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>’s
+“grandchildren.” If the independent set does not include
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>,
+then the independent set can be written as the union of the independent
+sets of the subtrees rooted at children of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math>.</p>
+<p>(draw on board)</p>
+<p>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo stretchy="false" form="prefix">(</mo><mi>w</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">c(w)</annotation></semantics></math>
+be a function that returns the children of vertex
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>w</mi><annotation encoding="application/x-tex">w</annotation></semantics></math>.
+Then, our observation above implies the following recurrence:</p>
+<p><span class="math display">$$
+MIS(v) = \text{max} \left. \begin{cases}
+\sum\limits_{w \in c(v)} MIS(w) &amp; \text{excluding v} \\
+1 + \sum\limits_{w \in c(v)} \sum\limits_{x \in c(w)} MIS(x) &amp;
+\text{including v}
+\end{cases} \right\\}
+$$</span></p>
+<p>What kind of data structure should we use to memoize this recurrence?
+(Tree!)</p>
+<p>How? (can add binary variable to nodes, to keep or to skip, as well
+as storing MIS(x) for each x when it is computed)</p>
+<p>In what order must we visit the nodes? Every vertex must be visited
+before its parent, requiring a post-order traversal.</p>
+<h3 id="runtime-analysis">Runtime Analysis</h3>
+<p>Hard to determine runtime from recurrence: sums will be different
+sizes at different levels, and dependent on tree structure.</p>
+<p>But consider: Each vertex contributes a constant amount of time to
+its parent and grandparent’s computations of MIS. Each vertex has at
+most one parent and at most one grandparent. So, counting only the
+contributions <em>up</em> the tree from each node, we conclude that this
+algorithm runs in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math>
+time.</p>
+<h3 id="algorithm">Algorithm</h3>
+<p>A full dynamic programming algorithm to find the size of the maximum
+independent set can be written as:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> TreeMIS(v):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  skip <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> w <span class="kw">in</span> children(v):</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    skip <span class="op">+=</span> TreeMIS(w)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  keep <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> w <span class="kw">in</span> children(v):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x <span class="kw">in</span> children(w):</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>      keep <span class="op">+=</span> x.MIS <span class="co"># retrieve cached value</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  v.MIS <span class="op">=</span> <span class="bu">max</span>([keep, skip]) <span class="co"># cache value</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> v.MIS</span></code></pre></div>
+<p>Since we have defined this recursively in the correct order to give
+us a postorder traversal, we will not repeat any computations.</p>
+<h2 id="example-4">Example 4</h2>
+<p>Another fun problem from bioinformatics: edit distance!</p>
+<p>The <strong>edit distance</strong> between two strings is the minimum
+number of letter insertions, letter deletions, and letter substitutions
+required to transform one string into the other.</p>
+<p>For example, the edit distance between FOOD and MONEY is at most
+four:</p>
+<pre><code>FOOD
+MOOD
+MOND
+MONED
+MONEY</code></pre>
+<p>Intermediate states do not have to be valid words.</p>
+<p>We can use a column representation to see why we must take at least
+four steps:</p>
+<pre><code>F O O   D
+M O N E Y</code></pre>
+<p>We cannot get away with fewer than one insertion and three
+substitutions.</p>
+<p>How to tell automatically what the shortest distance is?</p>
+<p>Dynamic programming steps:</p>
+<ol type="1">
+<li>Identify recursive structure</li>
+<li>Write down correct recurrence</li>
+<li>Analyze recurrence to identify subproblems, dependencies, and
+memoize</li>
+</ol>
+<h3 id="recursive-inductive-structure">Recursive (Inductive)
+Structure</h3>
+<p>Take the gap representation for the minimal edit distance. If we
+remove the last (or first - order is arbitrary) column, the remaining
+columns must represent the shortest edit sequence for the remaining
+prefixes. Proof by induction: if the prefixes had a shorter edit
+sequence, we could use that, glue the last column back on, and the
+result would violate our original assumption of minimal edit
+distance.</p>
+<p>So we are looking to find a sequence of editing operations. Editing
+operations do not depend on previously chosen operations.</p>
+<p>Another example:</p>
+<pre><code>AL TRUISTIC
+ALGOR I THM</code></pre>
+<p>Thus, for any two input strings
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>m</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">A[1..m]</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">B[1..n]</annotation></semantics></math>,
+we can create a recursive function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Edit(i,j)</annotation></semantics></math>
+that computes the edit distance between the prefixes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">A[1..i]</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>B</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>j</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">B[1..j]</annotation></semantics></math>,
+and we need to compute
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">[</mo><mi>m</mi><mo>,</mo><mi>n</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">Edit[m,n]</annotation></semantics></math>.</p>
+<h3 id="recurrence">Recurrence</h3>
+<p>Three possibilities for each column:</p>
+<ul>
+<li><strong>Insertion:</strong> In this case, we need one insertion, and
+the edit distance is equal to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Edit(i, j-1) + 1</annotation></semantics></math>.</li>
+</ul>
+<pre><code>ALTR
+ALGOR</code></pre>
+<ul>
+<li><strong>Deletion:</strong> In this case, the edit distance is equal
+to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Edit(i-1, j) + 1</annotation></semantics></math>.</li>
+</ul>
+<pre><code>ALTRU
+ALGO</code></pre>
+<ul>
+<li><strong>Substitution:</strong> In this case, if we are comparing two
+different characters, the edit distance is equal to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">Edit(i-1, j-1) + 1</annotation></semantics></math>.
+If both characters are equal, the “substitution” is free, so our edit
+distance is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Edit(i-1, j-1)</annotation></semantics></math>.</li>
+</ul>
+<pre><code>ALTRU
+ALGOR</code></pre>
+<pre><code>ALTRUI
+ALGORI</code></pre>
+<ul>
+<li>Special cases: if i=0 or j=0</li>
+<li>Transforming the empty string into a string of length
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+requires
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>
+insertions, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mn>0</mn><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">Edit(0,j) = j</annotation></semantics></math>.</li>
+<li>Transforming a string of length
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+into the empty string requires
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+deletions, so
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mn>0</mn><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">Edit(i,0) = i</annotation></semantics></math>.</li>
+</ul>
+<p>So, we can write down our full recurrence as:</p>
+<p><span class="math display">$$
+Edit(i,j) = \begin{cases}
+i &amp; \text{if $j = 0$} \\
+j &amp; \text{if $i = 0$} \\
+\text{min} \left. \begin{cases}
+Edit(i,j-1) + 1 \\
+Edit(i-1,j) + 1 \\
+Edit(i-1, j-1) + [A[i] \neq B[j]]
+\end{cases} \right\\} &amp; \text{otherwise}
+\end{cases}
+$$</span></p>
+<p>(explain indicator variable)</p>
+<h3 id="mechanical-memoization">Mechanical Memoization</h3>
+<ul>
+<li><strong>Subproblems:</strong> recursive subproblems are defined by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>i</mi><mo>≤</mo><mi>m</mi></mrow><annotation encoding="application/x-tex">0 \leq i \leq m</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>j</mi><mo>≤</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">0 \leq j \leq n</annotation></semantics></math></li>
+<li><strong>Data structure:</strong> We will have at most
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>m</mi><mo>⋅</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">m \cdot n</annotation></semantics></math>
+values for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Edit(i,j)</annotation></semantics></math>,
+so we can store in a two-dimensional array,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">[</mo><mn>0</mn><mi>…</mi><mi>m</mi><mo>,</mo><mn>0</mn><mi>…</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">Edit[0 \ldots m, 0 \ldots n]</annotation></semantics></math>.</li>
+<li><strong>Dependencies:</strong> Each entry
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">Edit(i,j)</annotation></semantics></math>
+depends on three neighboring entries,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">Edit[i-1,j]</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">Edit[i, j-1]</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>E</mi><mi>d</mi><mi>i</mi><mi>t</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">Edit[i-1, j-1]</annotation></semantics></math>.</li>
+<li><strong>Evaluation order:</strong> If we use standard row-major
+order (left to right in each row, from top row to bottom row), the
+entries will be defined in the correct order.</li>
+</ul>
+<p>How to initialize base cases?</p>
+<h3 id="performance-analysis">Performance Analysis</h3>
+<p>To fill out the table will take
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>m</mi><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(mn)</annotation></semantics></math>
+time and space. Computing each entry takes constant time since we know
+its predecessors.</p>
+<p>(Show memoization table)</p>
+<p>Our table does not store arrows: how long does it take to reconstruct
+the shortest edit sequence?</p>
+<h2 id="example-5">Example 5</h2>
+<p>Our final example for dynamic programming / cacheing is the problem
+of forming optimal binary search trees.</p>
+<p>As input, we are given a sorted array
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">A[1..n]</annotation></semantics></math>
+of search keys and an array
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">f[1..n]</annotation></semantics></math>
+of frequency counts, where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">f[i]</annotation></semantics></math>
+is the number of searches for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">A[i]</annotation></semantics></math>.</p>
+<p>Our task is to construct a binary search tree for the set of keys
+such that the total cost of all the searches is as small as
+possible.</p>
+<p>How to find recurrence?</p>
+<p>First, let’s write down the total cost of all searches in an
+arbitrary tree
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>.
+The cost of searching
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">A[i]</annotation></semantics></math>
+will be the frequency
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">f[i]</annotation></semantics></math>
+multiplied by the depth of the node containing
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">A[i]</annotation></semantics></math>.
+So the total cost will be:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>T</mi><mo>,</mo><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo><mo>*</mo><mo stretchy="false" form="prefix">(</mo><mi>d</mi><mi>e</mi><mi>p</mi><mi>t</mi><mi>h</mi><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+Cost(T, f[1..n]) = \sum\limits_{i=1}^n f[i] * (depth(A[i] + 1)
+</annotation></semantics></math></p>
+<p>However, one of these nodes must be the root node. Let us set the
+root node at i=r, which must have depth zero. Then, we can factor our
+sum as</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>T</mi><mo>,</mo><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo><mo>+</mo><mspace width="0.222em"></mspace><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>r</mi><mo>−</mo><mn>1</mn></mrow></munderover><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo><mo>*</mo><mo stretchy="false" form="prefix">(</mo><mi>d</mi><mi>e</mi><mi>p</mi><mi>t</mi><msub><mi>h</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mspace width="0.222em"></mspace><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>r</mi><mo>+</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo><mo>*</mo><mo stretchy="false" form="prefix">(</mo><mi>d</mi><mi>e</mi><mi>p</mi><mi>t</mi><msub><mi>h</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo stretchy="false" form="prefix">(</mo><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+Cost(T, f[1..n]) = \sum\limits_{i=1}^n f[i] + \
+\sum\limits_{i=1}^{r-1} f[i] * (depth_{left}(A[i] + 1) + \
+\sum\limits_{i=r+1}^{n} f[i] * (depth_{right}(A[i] + 1)
+</annotation></semantics></math></p>
+<p>Where we have factored the sum into the contribution from the root,
+left and right subtrees. The recursive structure is now more clear, and
+we can write:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>T</mi><mo>,</mo><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">)</mo><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo><mo>+</mo><mspace width="0.222em"></mspace><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>T</mi><mrow><mi>l</mi><mi>e</mi><mi>f</mi><mi>t</mi></mrow></msub><mo>,</mo><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>r</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mspace width="0.222em"></mspace><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>T</mi><mrow><mi>r</mi><mi>i</mi><mi>g</mi><mi>h</mi><mi>t</mi></mrow></msub><mo>,</mo><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>r</mi><mo>+</mo><mn>1</mn><mi>.</mi><mi>.</mi><mi>n</mi><mo stretchy="false" form="postfix">]</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+Cost(T, f[1..n]) = \sum\limits_{i=1}^n f[i] + \
+Cost(T_{left}, f[1..r-1]) + \
+Cost(T_{right}, f[r+1..n])
+</annotation></semantics></math></p>
+<p>So, it becomes clear that finding the optimal cost involves picking
+the correct root at every level of execution. For this naive approach,
+our recurrence is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>α</mi><mi>n</mi><mo>+</mo><mn>2</mn><msubsup><mo>∑</mo><mrow><mi>k</mi><mo>=</mo><mn>0</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></msubsup><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">T(n) = \alpha n + 2 \sum_{k=0}^{n-1} T(k)</annotation></semantics></math>.
+The solution is in your book, and gives us
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mn>3</mn><mi>n</mi></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">T(n) = O(3^n)</annotation></semantics></math>.
+How to improve?</p>
+<p>First, let’s write a recurrence for OptCost that explicitly searches
+over the options for the root:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mi>p</mi><mi>t</mi><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mrow><mi>i</mi><mo>&gt;</mo><mi>k</mi></mrow></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mi>i</mi></mrow><mi>k</mi></munderover><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>j</mi><mo stretchy="false" form="postfix">]</mo><mo>+</mo><munder><mi mathvariant="normal">min</mi><mrow><mi>i</mi><mo>≤</mo><mi>r</mi><mo>≤</mo><mi>k</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mi>O</mi><mi>p</mi><mi>t</mi><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>r</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>O</mi><mi>p</mi><mi>t</mi><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable></mrow></mtd><mtd columnalign="left" style="text-align: left"><mi>o</mi><mi>t</mi><mi>h</mi><mi>e</mi><mi>r</mi><mi>w</mi><mi>i</mi><mi>s</mi><mi>e</mi></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
+OptCost(i,k) = \begin{cases}
+0 &amp; \text{if $i&gt;k$} \\
+\sum\limits_{j=i}^k f[j] + \min\limits_{i \leq r \leq k} \begin{cases}
+OptCost(i, r-1) + OptCost(r+1,k) \end{cases} &amp; otherwise
+\end{cases}
+</annotation></semantics></math></p>
+<p>A lot going on here! First, let us separately memoize the sum in the
+first term.</p>
+<p>Let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">F(i,k)</annotation></semantics></math>
+denote the total frequency count for all keys in interval
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mi>.</mi><mi>.</mi><mi>k</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">A[i..k]</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo stretchy="false" form="postfix">]</mo></mtd><mtd columnalign="left" style="text-align: left"><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mrow><mi>i</mi><mo>=</mo><mi>k</mi></mrow></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mi>F</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>f</mi><mo stretchy="false" form="prefix">[</mo><mi>k</mi><mo stretchy="false" form="postfix">]</mo></mtd><mtd columnalign="left" style="text-align: left"><mtext mathvariant="normal">otherwise</mtext></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
+F(i,k) = \begin{cases}
+f[i] &amp; \text{if $i=k$} \\
+F(i, k-1) + f[k] &amp; \text{otherwise}
+\end{cases}
+</annotation></semantics></math></p>
+<p>Can compute all values in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math>
+time.</p>
+<h3 id="mechanical-memoization-1">Mechanical Memoization</h3>
+<p>Now we have:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mi>p</mi><mi>t</mi><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mn>0</mn></mtd><mtd columnalign="left" style="text-align: left"><mrow><mtext mathvariant="normal">if </mtext><mspace width="0.333em"></mspace></mrow><mrow><mi>i</mi><mo>&gt;</mo><mi>k</mi></mrow></mtd></mtr><mtr><mtd columnalign="left" style="text-align: left"><mi>F</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">]</mo><mo>+</mo><munder><mi mathvariant="normal">min</mi><mrow><mi>i</mi><mo>≤</mo><mi>r</mi><mo>≤</mo><mi>k</mi></mrow></munder><mrow><mo stretchy="true" form="prefix">{</mo><mtable><mtr><mtd columnalign="left" style="text-align: left"><mi>O</mi><mi>p</mi><mi>t</mi><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>r</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>+</mo><mi>O</mi><mi>p</mi><mi>t</mi><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">(</mo><mi>r</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">)</mo></mtd></mtr></mtable></mrow></mtd><mtd columnalign="left" style="text-align: left"><mi>o</mi><mi>t</mi><mi>h</mi><mi>e</mi><mi>r</mi><mi>w</mi><mi>i</mi><mi>s</mi><mi>e</mi></mtd></mtr></mtable></mrow></mrow><annotation encoding="application/x-tex">
+OptCost(i,k) = \begin{cases}
+0 &amp; \text{if $i&gt;k$} \\
+F[i,k] + \min\limits_{i \leq r \leq k} \begin{cases}
+OptCost(i, r-1) + OptCost(r+1,k) \end{cases} &amp; otherwise
+\end{cases}
+</annotation></semantics></math></p>
+<ul>
+<li><strong>Subproblems:</strong> specified by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>.
+We require
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>≤</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">i \leq k</annotation></semantics></math>.</li>
+<li><strong>Data Structure:</strong> We can use a two dimensional array,
+and fill out half.</li>
+<li><strong>Dependencies:</strong> Each entry depends on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mi>p</mi><mi>t</mi><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">OptCost[i, j-1]</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mi>p</mi><mi>t</mi><mi>C</mi><mi>o</mi><mi>s</mi><mi>t</mi><mo stretchy="false" form="prefix">[</mo><mi>j</mi><mo>+</mo><mn>1</mn><mo>,</mo><mi>k</mi><mo stretchy="false" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">OptCost[j+1,k]</annotation></semantics></math>
+(left and below).</li>
+</ul>
+<p>(draw evaluation order options on board)</p>
+<ul>
+<li><strong>Performance analysis:</strong> Clearly require
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math>
+space. However, each entry requires evaluating up to
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+different options for the minimum. Thus, we expect
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n^3)</annotation></semantics></math>
+time.</li>
+</ul>
 </body>
 </html>

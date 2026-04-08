@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>randomized_algorithms</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<h1 id="quicksort-review">Quicksort Review</h1>
+<p>(see scripts/quicksort.py)</p>
+<h1 id="intuition-of-randomized-quicksort-average-case">Intuition of
+Randomized Quicksort Average Case</h1>
+<p>(to be transcribed)</p>
+<h1 id="exact-expected-runtime-of-quicksort">Exact Expected Runtime of
+Quicksort</h1>
+<h2 id="comparisons">Comparisons</h2>
+<p><strong>Lemma 1:</strong> The running time of Quicksort on an
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>-element
+array is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>+</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n+X)</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+is the number of element comparisons performed.</p>
+<p><strong>Proof:</strong> Each time partition is called, the selected
+pivot is never included in any future calls to quicksort or partition.
+Thus, there will be at most
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+calls to Partition over the entire execution.</p>
+<p>Partition takes
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(1)</annotation></semantics></math>
+time plus an amount of time proportional to the number of iterations of
+the for loop. Each iteration performs one element comparison. There are
+at most
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+calls to Partition.</p>
+<p>Thus, the total time for quicksort is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>+</mo><mi>X</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n+X)</annotation></semantics></math>.</p>
+<p><strong>Lemma 2:</strong> During the execution of
+Randomized-Quicksort on an array of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+distinct elements
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mn>1</mn></msub><mo>&lt;</mo><msub><mi>z</mi><mn>2</mn></msub><mo>&lt;</mo><mi>…</mi><mo>,</mo><msub><mi>z</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">z_1 &lt; z_2 &lt; \ldots, z_j</annotation></semantics></math>,
+an element
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">z_i</annotation></semantics></math>
+is compared with an element
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>j</mi></msub><annotation encoding="application/x-tex">z_j</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i&lt;j</annotation></semantics></math>,
+if and only if one of them is chosen as a pivot before any other element
+in the set
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">Z_{ij}</annotation></semantics></math>.
+No two elements are ever compared twice.</p>
+<p><strong>Proof:</strong> Consider the case where it is the first time
+an element
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">x \in
+Z_{ij}</annotation></semantics></math> is chosen as a pivot. There are
+three cases to consider:</p>
+<ul>
+<li>If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+is neither
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">z_i</annotation></semantics></math>
+nor
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>j</mi></msub><annotation encoding="application/x-tex">z_j</annotation></semantics></math>,
+then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">z_i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>j</mi></msub><annotation encoding="application/x-tex">z_j</annotation></semantics></math>
+are not compared at any subsequent time, because they will be
+partitioned by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>.</li>
+<li>If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>z</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">x=z_i</annotation></semantics></math>,
+then Partition compares
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">z_i</annotation></semantics></math>
+with every other item in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">Z_{ij}</annotation></semantics></math>.
+Similarly, if
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><msub><mi>z</mi><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">x=z_j</annotation></semantics></math>,
+then Partition compares
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>j</mi></msub><annotation encoding="application/x-tex">z_j</annotation></semantics></math>
+with every other item in
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">Z_{ij}</annotation></semantics></math>.
+Thus,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">z_i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>j</mi></msub><annotation encoding="application/x-tex">z_j</annotation></semantics></math>
+are compared if and only if one of them is the first to be chosen as a
+pivot out of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">Z_{ij}</annotation></semantics></math>.
+Since the pivot is removed from future comparisons, it is never compared
+again with any other element, thus each pairwise comparison of elements
+only occurs at most once.</li>
+</ul>
+<p><strong>Lemma 3:</strong> Consider an execution of
+Randomized-Quicksort on an array of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+distinct elements
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mn>1</mn></msub><mo>&lt;</mo><msub><mi>z</mi><mn>2</mn></msub><mo>&lt;</mo><mi>…</mi><mo>&lt;</mo><msub><mi>z</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">z_1 &lt; z_2 &lt; \ldots &lt; z_n</annotation></semantics></math>.
+Given two arbitrary elements
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>i</mi></msub><annotation encoding="application/x-tex">z_i</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>z</mi><mi>j</mi></msub><annotation encoding="application/x-tex">z_j</annotation></semantics></math>
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>&lt;</mo><mi>j</mi></mrow><annotation encoding="application/x-tex">i&lt;j</annotation></semantics></math>,
+the probability that they are compared is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>−</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">2/(j-i+1)</annotation></semantics></math>.</p>
+<p><strong>Proof:</strong> Consider the tree of recursive calls made by
+Randomized-Quicksort, and the set of elements provided as input to each
+call. Initially, the root set contains all elements of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">Z_{ij}</annotation></semantics></math>.
+These elements stay together (and are not compared to each other) until
+Partition chooses some
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">x \in Z_{ij}</annotation></semantics></math>
+as the pivot. From that point on, the pivot
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+appears in no subsequent input and is not compared.</p>
+<p>The first time that we choose a pivot
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>∈</mo><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">x \in Z_{ij}</annotation></semantics></math>,
+each element is equally likely. Since
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">|</mo><msub><mi>Z</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><mo stretchy="false" form="prefix">|</mo><mo>=</mo><mi>j</mi><mo>−</mo><mi>i</mi><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">|Z_{ij}| = j-i+1</annotation></semantics></math>,
+the probability is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mo stretchy="false" form="prefix">(</mo><mi>j</mi><mo>−</mo><mi>i</mi><mo>+</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">1/(j-i+1)</annotation></semantics></math>
+that any given element is chosen as the pivot. Thus, by Lemma 2, we
+have:</p>
+<p><span class="math display">$$
+\begin{align\*}
+Pr(z_i \text{  is compared to  } z_j) = &amp; Pr(z_i \text{or} z_j
+\text{first pivot}) \\
+= &amp; Pr(z_i \text{first pivot}) + Pr(z_j \text{first pivot}) \\
+= &amp; \frac{2}{j-i+1}
+\end{align\*}
+$$</span></p>
+<p>where the second line follows from the first because the two events
+are mutually exclusive.</p>
+<p><strong>Theorem:</strong> The expected running time of
+Randomized-Quicksort on
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+distinct elements is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mrow><mi mathvariant="normal">lg</mi><mo>&#8289;</mo></mrow><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n \lg{n})</annotation></semantics></math>.</p>
+<p><strong>Proof:</strong> Let the elements be
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>z</mi><mn>1</mn></msub><mo>&lt;</mo><msub><mi>z</mi><mn>2</mn></msub><mo>&lt;</mo><mi>…</mi><mo>&lt;</mo><msub><mi>z</mi><mi>n</mi></msub></mrow><annotation encoding="application/x-tex">z_1 &lt; z_2 &lt; \ldots &lt; z_n</annotation></semantics></math>.
+Define an indicator variable <span class="math inline">$X_{ij} = [z_i
+\text{ is compared to } z_j\]$</span>. From Lemma 2, each pair is
+compared at most once, so we can express
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+as</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mrow><mi>n</mi><mo>−</mo><mn>1</mn></mrow></munderover><munderover><mo>∑</mo><mrow><mi>j</mi><mo>=</mo><mi>i</mi><mo>+</mo><mn>1</mn></mrow><mi>n</mi></munderover><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub></mrow><annotation encoding="application/x-tex">
+X = \sum_{i=1}^{n-1} \sum_{j=i+1}^n X_{ij}
+</annotation></semantics></math></p>
+<p>By taking expectations of both sides, and by linearity of
+expectation, we obtain:</p>
+<p><span class="math display">$$
+\begin{align\*}
+E\[X\] = &amp; E \large[ \sum_{i=1}^{n-1} \sum_{j=i+1}^n X_{ij} \large]
+\\
+= &amp; \sum_{i=1}^{n-1} \sum_{j=i+1}^n E\[ X_{ij} ] \\
+= &amp; \sum_{i=1}^{n-1} \sum_{j=i+1}^n Pr(z_i \text{compared to} z_j)
+\\
+= &amp; \sum_{i=1}^{n-1} \sum_{j=i+1}^n \frac{2}{j-i+1}
+\end{align\*}
+$$</span></p>
+<p>Change of variables:</p>
+<p><span class="math display">$$
+\begin{align\*}
+E\[X\] = &amp; \sum_{i=1}^{n-1} \sum_{k=1}^{n-i} \frac{2}{k+1} \\
+&lt; &amp; \sum_{i=1}^{n-1} \sum_{k=1}^{n} \frac{2}{k} \\
+= &amp; \sum_{i=1}^{n-1} O(\lg{n}) \\
+= &amp; O(n\lg{n})
+\end{align\*}
+$$</span></p>
+<h1 id="more-small-problems">More small problems</h1>
+<h2 id="birthday-problem">Birthday problem</h2>
+<p>For each pair
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(i,j)</annotation></semantics></math>
+of the
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+people in the room, define the indicator random variable
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>X</mi><mrow><mi>i</mi><mi>j</mi></mrow></msub><annotation encoding="application/x-tex">X_{ij}</annotation></semantics></math>,
+for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>≤</mo><mi>i</mi><mo>&lt;</mo><mi>j</mi><mo>≤</mo><mi>k</mi></mrow><annotation encoding="application/x-tex">1 \leq i &lt; j \leq k</annotation></semantics></math>,
+by</p>
+<p><span class="math display">$$
+\begin{align\*}
+X_{ij} &amp; = \[\text{person } i \text{ and person } j \text{ have the
+same birthday}\] \\
+&amp; = \begin{cases}
+1 &amp; \text{same birthday} \\
+0 &amp; otherwise
+\end{cases}
+\end{align\*}
+$$</span></p>
+<p>If we consider
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
+days in a year, the probability that both birthdays fall on the same day
+is</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mi mathvariant="normal">Pr</mi><mo>&#8289;</mo></mrow><mrow><msub><mi>d</mi><mi>i</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> and </mtext><mspace width="0.333em"></mspace></mrow><msub><mi>d</mi><mi>j</mi></msub><mrow><mspace width="0.333em"></mspace><mtext mathvariant="normal"> is on day </mtext><mspace width="0.333em"></mspace></mrow><mi>r</mi></mrow></mrow><annotation encoding="application/x-tex">
+\sum_{r=1}^n \Pr{d_i \text{ and } d_j \text{ is on day } r}
+</annotation></semantics></math></p>
+<p>which becomes</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>r</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mfrac><mn>1</mn><mi>n</mi></mfrac><mfrac><mn>1</mn><mi>n</mi></mfrac><mo>=</mo><mfrac><mn>1</mn><mi>n</mi></mfrac><mi>.</mi></mrow><annotation encoding="application/x-tex">
+\sum_{r=1}^n \frac{1}{n} \frac{1}{n} = \frac{1}{n}.
+</annotation></semantics></math></p>
+<p>Next, let
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>
+be the random variable that counts the number of pairs of individuals
+having the same birthday.</p>
+<p>Taking expectation of both sides and applying linearity of
+expectation, we obtain</p>
+<p><span class="math display">$$
+\begin{align\*}
+E\[X\] = &amp; E\large[ \sum_{i=1}^{k-1} \sum_{j=i+1}^k X_{ij} \large]
+\\
+= &amp; \binom{k}{2} \frac{1}{n} \\
+= &amp; \frac{k(k-1)}{2n}
+\end{align\*}
+$$</span></p>
+<p>When
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>k</mi><mo stretchy="false" form="prefix">(</mo><mi>k</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mo>≥</mo><mn>2</mn><mi>n</mi></mrow><annotation encoding="application/x-tex">k(k-1) \geq 2n</annotation></semantics></math>,
+expected number is at least one.</p>
+</body>
+</html>

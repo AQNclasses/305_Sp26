@@ -1,15 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>runtime_and_asymptotic</title>
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     html {
-      line-height: 1.5;
-      font-family: Georgia, serif;
-      font-size: 20px;
       color: #1a1a1a;
       background-color: #fdfdfd;
     }
@@ -28,13 +28,16 @@
     @media (max-width: 600px) {
       body {
         font-size: 0.9em;
-        padding: 1em;
+        padding: 12px;
       }
       h1 {
         font-size: 1.8em;
       }
     }
     @media print {
+      html {
+        background-color: white;
+      }
       body {
         background-color: transparent;
         color: black;
@@ -58,6 +61,10 @@
       color: #1a1a1a;
     }
     img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
       max-width: 100%;
     }
     h1, h2, h3, h4, h5, h6 {
@@ -84,9 +91,11 @@
       color: #606060;
     }
     code {
-      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
       font-size: 85%;
       margin: 0;
+      hyphens: manual;
     }
     pre {
       margin: 1em 0;
@@ -102,8 +111,8 @@
      overflow: visible;
     }
     hr {
-      background-color: #1a1a1a;
       border: none;
+      border-top: 1px solid #1a1a1a;
       height: 1px;
       margin: 1em 0;
     }
@@ -146,12 +155,21 @@
     #TOC a:not(:hover) {
       text-decoration: none;
     }
-    code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
-    span.underline{text-decoration: underline;}
-    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
     pre > code.sourceCode { white-space: pre; position: relative; }
     pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
     pre > code.sourceCode > span:empty { height: 1.2em; }
@@ -218,75 +236,79 @@
   </style>
 </head>
 <body>
-<h1 id="notation">Notation</h1>
-<h2 id="o-notation">O-notation</h2>
-<p>O-notation characterizes an upper bound on the asymptotic behavior of
-a function.</p>
-<p>O-notation implies that a function grows <em>no faster</em> than a
-certain rate. The rate is determined by the highest order term.</p>
-<p>For example,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>7</mn><msup><mi>n</mi><mn>3</mn></msup><mo>+</mo><mn>100</mn><msup><mi>n</mi><mn>2</mn></msup><mo>−</mo><mn>20</mn><mi>n</mi><mo>+</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">f(n) = 7n^3 + 100n^2 - 20n + 6</annotation></semantics></math>
-is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">O(n^3)</annotation></semantics></math>.</p>
-<p>The function
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(n)</annotation></semantics></math>
-is also
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>n</mi><mn>5</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">O(n^5)</annotation></semantics></math>,
-and in general is $O(n^c) for any constant
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>≥</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">c \geq 3</annotation></semantics></math>.</p>
-<h2 id="ω-notation">Ω-notation</h2>
-<p>Ω-notation characterizes a lower bound on the asymptotic behavior of
-a function, implying that a function grows <em>at least as fast</em> as
-a certain rate. Again, this rate is based on the highest-order term.</p>
-<p>Using the same function
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>7</mn><msup><mi>n</mi><mn>3</mn></msup><mo>+</mo><mn>100</mn><msup><mi>n</mi><mn>2</mn></msup><mo>−</mo><mn>20</mn><mi>n</mi><mo>+</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">f(n) = 7n^3 + 100n^2 - 20n + 6</annotation></semantics></math>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(n)</annotation></semantics></math>
-is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Ω</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Omega(n^3)</annotation></semantics></math>.</p>
-<p>The function
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">f(n)</annotation></semantics></math>
-is also
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Ω</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Omega(n^2)</annotation></semantics></math>,
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Ω</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Omega(n)</annotation></semantics></math>,
-and
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Ω</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>n</mi><mi>c</mi></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Omega(n^c)</annotation></semantics></math>
-for any
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>≤</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">c \leq 3</annotation></semantics></math>.</p>
-<h2 id="θ-notation">Θ-notation</h2>
-<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math>-notation
-characterizes a <em>tight bound</em> on the asymptotic behavior of the
-function: it states that a function grows at precisely a certain rate,
-based on the highest-order term (in the limit of large
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>).</p>
-<p>Our example function
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mn>7</mn><msup><mi>n</mi><mn>3</mn></msup><mo>+</mo><mn>100</mn><msup><mi>n</mi><mn>2</mn></msup><mo>−</mo><mn>20</mn><mi>n</mi><mo>+</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">f(n) = 7n^3 + 100n^2 - 20n + 6</annotation></semantics></math>
-is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Θ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Theta(n^3)</annotation></semantics></math>,
-and is
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Θ</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>n</mi><mi>c</mi></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\Theta(n^c)</annotation></semantics></math>
-only for
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">c=3</annotation></semantics></math>.</p>
-<p>The logical relationship between the notations is:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>∧</mo><mi>Ω</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow><mo>⇔</mo><mi>Θ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
-O(f(n)) \wedge \Omega(f(n)) \iff \Theta(f(n))
-</annotation></semantics></math></p>
-<h1 id="computing-runtime">Computing runtime</h1>
+<h1 id="runtime-and-asymptotics">Runtime and Asymptotics</h1>
+<h2 id="computational-model">Computational model</h2>
 <ul>
-<li>So far, we’ve been looking a lot at recurrences and how to analyze
-recursive algorithms.</li>
-<li>Quick refresh of “non-recursive” runtime analysis</li>
-<li>Counting!</li>
+<li>RAM model:
+<ul>
+<li>single processor, sequential execution</li>
+<li>constant-time elementary instructions (arithmetic, data movement,
+control)</li>
+<li>runtime cost is uniform (1 time unit) for all simple instructions
+(arithmetic, calling subroutine, initializing variables, etc)</li>
+<li>memory is unlimited and “flat” : no hierarchy, accessing a variable
+in memory takes 1 time unit.</li>
+</ul></li>
+<li>Running time of an algorithm is always given in terms of input size
+(usually N).
+<ul>
+<li>Input can have other structure, eg: sorted or unsorted, cyclic or
+acyclic graphs</li>
+</ul></li>
 </ul>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> example(n):</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>    j <span class="op">=</span> <span class="dv">0</span>                   <span class="co"># 1 assignment</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    j <span class="op">+=</span> <span class="dv">1</span>                  <span class="co"># 1 operation</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,n):    <span class="co"># 1 assignment to initialize, one for each increment = n+1</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>      j <span class="op">=</span> <span class="dv">1</span>                 <span class="co"># n (cost one, inside for loop)</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      <span class="cf">while</span> j <span class="op">&lt;=</span> n:         <span class="co"># one evaluation per iteration of inner loop</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>         j <span class="op">+=</span> <span class="dv">2</span>             <span class="co"># 1 operation per iteration of inner loop</span></span></code></pre></div>
+<h2 id="complexity">Complexity</h2>
+<p>The number of steps the algorithm takes determines its
+<strong>computational complexity</strong>. However, the number of steps
+an algorithm takes may depend on structure of the input (consider
+sorting an already-sorted list).</p>
+<p>There are three cases we usually consider:</p>
 <ul>
-<li>How many times will inner loop evaluate for arbitrary
+<li>Worst Case complexity: maximum number of steps</li>
+<li>Best Case complexity: minimum number of steps</li>
+<li>Average case complexity: average over all possible inputs
+<ul>
+<li>will discuss further later in the quarter</li>
+</ul></li>
+</ul>
+<p>Usually we focus on worst-case complexity. Why?</p>
+<h2 id="computing-runtime-counting">Computing runtime: Counting!</h2>
+<p>Assumptions:</p>
+<ol type="1">
+<li>“Simple” operations take constant time (doesn’t depend on size of
+input)</li>
+<li>The line defining a loop runs one more time than the statements
+inside the loop (has to check for ending condition)</li>
+</ol>
+<h3 id="example-1">Example 1</h3>
+<p>Consider a straightforward implementation of insertion sort.</p>
+<p>Let <code>ti</code> be a variable representing the number of times
+the inner while loop executes for a given value of <code>i</code>.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> insertionSort(A, n):</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> j<span class="op">=</span><span class="dv">2</span> to n:                         <span class="co"># c1*n (assume loop is inclusive of n)</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> A[j]                          <span class="co"># c2*(n-1)</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> j<span class="op">-</span><span class="dv">1</span>                             <span class="co"># c3*(n-1)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> i <span class="op">&gt;</span> <span class="dv">0</span> <span class="kw">and</span> A[i] <span class="op">&gt;</span> key:         <span class="co"># c4*(sum ti from 2 to n)</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>      A[i<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> A[i]                     <span class="co"># c5*(sum ti-1 from 2 to n)</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>      i <span class="op">=</span> i<span class="op">-</span><span class="dv">1</span>                           <span class="co"># c6*(sum ti-1 from 2 to n)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    A[i<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> key                        <span class="co"># c7*(n-1)</span></span></code></pre></div>
+<p>Best case: already sorted list. How many times will the inner loop
+run for each <code>i</code>? In the best case, only twice (check that
+elements i and <code>i+1</code> are sorted, then check loop termination
+condition).</p>
+<p>Worst case: reverse sorted list. Same question.</p>
+<p>How would we try to prove correctness? (loop invariants)</p>
+<h3 id="example-2">Example 2</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> example(n):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    j <span class="op">=</span> <span class="dv">0</span>                   <span class="co"># 1 initialize, 1 assignment</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,n):    <span class="co"># 1 assignment to initialize, one for each increment = n+1</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>      j <span class="op">=</span> <span class="dv">1</span>                 <span class="co"># 1*n (cost one, inside for loop)</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>      <span class="cf">while</span> j <span class="op">&lt;=</span> n:         <span class="co"># 1*n*(iterations of inner loop)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>         j <span class="op">+=</span> <span class="dv">2</span>             <span class="co"># 1*n*(iterations of inner loop)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> j                <span class="co"># 1: count return</span></span></code></pre></div>
+<ul>
+<li>How many times will inner while loop evaluate for arbitrary
 <code>i</code>?</li>
 <li>Can estimate <code>n/2</code> by inspection</li>
 <li>Algebra solution:
@@ -299,29 +321,31 @@ iterations, value of <code>j</code> is <code>2k+1</code></li>
 -&gt; <code>k = (n-1)/2</code></li>
 </ul></li>
 <li>So inner loop will run
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">(n-1)/2</annotation></semantics></math>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">(n-1)/2</annotation></semantics></math>
 times during <em>each</em> iteration of outer loop</li>
 <li>Total count -&gt;
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mo>*</mo><mi>c</mi><mo>*</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">n*c*(n-1)/2</annotation></semantics></math></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>n</mi><mi>c</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">nc(n-1)/2</annotation></semantics></math></li>
 <li>What if inner loop instead terminates when
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>j</mi><mo>&lt;</mo><mo>=</mo><mi>i</mi></mrow><annotation encoding="application/x-tex">j &lt;= i</annotation></semantics></math>??
 <ul>
-<li>Can simply multiply max runtime by
+<li>Can multiply max runtime by
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>
 (over-estimation)</li>
 <li>To get tighter bound, manually compute sum over i</li>
 </ul></li>
 </ul>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">
 \sum_{i=1}^n (i-1)/2
 </annotation></semantics></math></p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mo stretchy="false" form="prefix">(</mo><mi>i</mi><mo>−</mo><mn>1</mn><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 \to \frac{1}{2} \sum_{i=1}^n (i-1)
 </annotation></semantics></math></p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo minsize="1.2" maxsize="1.2" stretchy="false" form="prefix">(</mo><mrow><mo stretchy="true" form="prefix">(</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>i</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mi>n</mi><mo minsize="1.2" maxsize="1.2" stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>→</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><mo minsize="120%" maxsize="120%" stretchy="true" form="prefix">(</mo><mo stretchy="false" form="prefix">(</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>n</mi></munderover><mi>i</mi><mo stretchy="false" form="postfix">)</mo><mo>−</mo><mi>n</mi><mo minsize="120%" maxsize="120%" stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
 \to \frac{1}{2} \big((\sum_{i=1}^n i) - n \big)
 </annotation></semantics></math></p>
-<h1 id="tips-and-tricks">Tips and Tricks</h1>
+<h3 id="tips-and-tricks">Tips and Tricks</h3>
+<p><code>https://discrete.openmathbooks.org</code> is a great resource
+in general.</p>
 <ul>
 <li>Arithmetic series finite sum
 <ul>
@@ -330,7 +354,7 @@ times during <em>each</em> iteration of outer loop</li>
 <li>Example:
 <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>+</mo><mn>5</mn><mo>+</mo><mn>8</mn><mo>+</mo><mn>11</mn><mo>+</mo><mn>14</mn><mo>=</mo><mn>40</mn></mrow><annotation encoding="application/x-tex">2 + 5 + 8 + 11 + 14 = 40</annotation></semantics></math></li>
 <li>Formula:
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>n</mi><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msub><mi>a</mi><mi>n</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mn>2</mn></mfrac><annotation encoding="application/x-tex">\frac{n(a_1 + a_n)}{2}</annotation></semantics></math></li>
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mi>n</mi><mo stretchy="false" form="prefix">(</mo><msub><mi>a</mi><mn>1</mn></msub><mo>+</mo><msub><mi>a</mi><mi>n</mi></msub><mo stretchy="false" form="postfix">)</mo></mrow><mn>2</mn></mfrac><annotation encoding="application/x-tex">\frac{n(a_1 + a_n)}{2}</annotation></semantics></math></li>
 </ul></li>
 <li>Geometric series sum
 <ul>
@@ -342,23 +366,210 @@ times during <em>each</em> iteration of outer loop</li>
 </ul></li>
 <li>Logarithm rules (+ exponent rules)</li>
 <li>Don’t stress about floor / ceilings</li>
-<li>Big theta: mostly we care about showing that lower and upper bound
-have same functional form. To justify, need to justify that there is no
-situation where we will change the functional form of the runtime
-expression
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>T</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">T(n)</annotation></semantics></math>.</li>
+<li>Exponents vs. polynomials:
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>c</mi><mi>N</mi></msup><annotation encoding="application/x-tex">c^N</annotation></semantics></math>
+will always be asymptotically larger than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>N</mi><mi>d</mi></msup><annotation encoding="application/x-tex">N^d</annotation></semantics></math>,
+where
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>d</mi><annotation encoding="application/x-tex">d</annotation></semantics></math>
+are arbitrary positive integers.</li>
 </ul>
-<h1 id="example-1">Example 1</h1>
-<p>Consider a straightforward implementation of insertion sort.</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> insertionSort(arr):</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(arr)):          <span class="co"># n+1</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> arr[i]                        <span class="co"># n</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    j <span class="op">=</span> i<span class="op">-</span><span class="dv">1</span>                             <span class="co"># n</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> j <span class="op">&gt;=</span> <span class="dv">0</span> <span class="kw">and</span> key <span class="op">&lt;</span> arr[j]:      <span class="co"># best case: 2; worst case: n</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>      arr[j<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> arr[j]                 <span class="co"># 1*above</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>      j <span class="op">-=</span> <span class="dv">1</span>                            <span class="co"># 1*above</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    arr[j<span class="op">+</span><span class="dv">1</span>] <span class="op">=</span> key                      <span class="co"># n</span></span></code></pre></div>
+<h1 id="asymptotics">Asymptotics</h1>
+<p>We care most about how runtime (or space, etc) scales with the size
+of the input.</p>
+<p>As
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>
+gets bigger, different parts of the runtime function will contribute
+more to others. Example: compare
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>x</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">f(x) = x^2</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><msup><mi>x</mi><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">g(x) = x^4</annotation></semantics></math>.
+When
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+is small, for example
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>1</mn><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">x=1/2</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>x</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">x=1</annotation></semantics></math>,
+we may have
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>&gt;</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f(x) &gt; g(x)</annotation></semantics></math>
+or
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>x</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f(x) = g(x)</annotation></semantics></math>.
+But as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+gets larger, we can clearly see that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>x</mi><mn>2</mn></msup><mo>&lt;</mo><msup><mi>x</mi><mn>4</mn></msup></mrow><annotation encoding="application/x-tex">x^2 &lt; x^4</annotation></semantics></math>
+and this property will not change as
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>
+increases further.</p>
+<p>We will formalize this idea. This allows us to say that two
+algorithms are <strong>asymptotically</strong> equally efficient, or
+that one is asymptotically more efficient than the other.</p>
+<h2 id="o-notation">O-notation</h2>
+<p>O-notation characterizes an <strong>upper bound</strong> on the
+asymptotic behavior of a function. We usually say this out loud as
+“big-Oh notation”. This is shorthand for a formal definition of classes
+of functions with bounded growth rates.</p>
+<p>Formally, for a function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(n)</annotation></semantics></math>,
+we define
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(g(n))</annotation></semantics></math>
+as the set of functions asymptotically bounded by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(n)</annotation></semantics></math>.
+We can write this set as</p>
+<pre class="math"><code>O(g(n)) = \{ f(n) : 0 \leq f(n) \leq c g(n), \forall n \geq n_0 \}</code></pre>
+<p>for some positive constants
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>0</mn></msub><annotation encoding="application/x-tex">n_0</annotation></semantics></math>.</p>
+<p>This means that there is some input size
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>0</mn></msub><annotation encoding="application/x-tex">n_0</annotation></semantics></math>
+beyond which
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(n)</annotation></semantics></math>
+is a strict upper bound for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f(n)</annotation></semantics></math>.</p>
+<p>O-notation implies that a function grows <em>no faster</em> than a
+certain rate. The rate is determined by the highest order term.</p>
+<p>For example,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>7</mn><msup><mi>n</mi><mn>3</mn></msup><mo>+</mo><mn>100</mn><msup><mi>n</mi><mn>2</mn></msup><mo>−</mo><mn>20</mn><mi>n</mi><mo>+</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">f(n) = 7n^3 + 100n^2 - 20n + 6</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n^3)</annotation></semantics></math>.</p>
+<p>Faster growing functions are also valid upper bounds, for example the
+function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f(n)</annotation></semantics></math>
+is also
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>5</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n^5)</annotation></semantics></math>.
+However, we say that
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>5</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n^5)</annotation></semantics></math>
+is not a <em>tight</em> upper bound while
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">O(n^3)</annotation></semantics></math>
+is a <em>tight</em> upper bound, as you can prove there is no polynomial
+smaller than
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>n</mi><mn>3</mn></msup><annotation encoding="application/x-tex">n^3</annotation></semantics></math>
+that can serve as an upper bound for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f(n)</annotation></semantics></math>.</p>
+<h2 id="ω-notation">Ω-notation</h2>
+<p>Ω-notation (big omega) characterizes a <strong>lower bound</strong>
+on the asymptotic behavior of a function, implying that a function grows
+<em>at least as fast</em> as a certain rate. Again, this rate is based
+on the highest-order term.</p>
+<p>Formally, for a function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(n)</annotation></semantics></math>,
+we define
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Omega(g(n))</annotation></semantics></math>
+as the set of functions lower-bounded by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(n)</annotation></semantics></math>.
+We write this as</p>
+<pre class="math"><code>\Omega(g(n)) = \{ f(n) : 0 \leq c g(n) \leq f(n), \forall n \geq n_0 \}</code></pre>
+<p>for some positive constants
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>0</mn></msub><annotation encoding="application/x-tex">n_0</annotation></semantics></math>.</p>
+<p>Using the same function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>7</mn><msup><mi>n</mi><mn>3</mn></msup><mo>+</mo><mn>100</mn><msup><mi>n</mi><mn>2</mn></msup><mo>−</mo><mn>20</mn><mi>n</mi><mo>+</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">f(n) = 7n^3 + 100n^2 - 20n + 6</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f(n)</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Omega(n^3)</annotation></semantics></math>.</p>
+<p>The function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f(n)</annotation></semantics></math>
+is also
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Omega(n^2)</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Omega(n)</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mi>c</mi></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Omega(n^c)</annotation></semantics></math>
+for any
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>≤</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">c \leq 3</annotation></semantics></math>.</p>
+<h2 id="θ-notation">Θ-notation</h2>
+<p><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math>-notation
+(big theta) characterizes a <em>tight upper and lower bound</em> on the
+asymptotic behavior of the function: it states that a function grows at
+precisely a certain rate, based on the highest-order term (in the limit
+of large
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>).</p>
+<p>Formally, we write
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Theta(g(n))</annotation></semantics></math>
+as the set of functions bounded above and below by
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(n)</annotation></semantics></math>:</p>
+<pre class="math"><code>\Theta(g(n)) = \{f(n): 0 \leq c_1 g(n) \leq f(n) \leq c_2 g(n), \forall n \geq n_0 \}</code></pre>
+<p>for positive constants
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mn>1</mn></msub><annotation encoding="application/x-tex">c_1</annotation></semantics></math>,
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>c</mi><mn>2</mn></msub><annotation encoding="application/x-tex">c_2</annotation></semantics></math>,
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>n</mi><mn>0</mn></msub><annotation encoding="application/x-tex">n_0</annotation></semantics></math>.</p>
+<p>Our example function
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mn>7</mn><msup><mi>n</mi><mn>3</mn></msup><mo>+</mo><mn>100</mn><msup><mi>n</mi><mn>2</mn></msup><mo>−</mo><mn>20</mn><mi>n</mi><mo>+</mo><mn>6</mn></mrow><annotation encoding="application/x-tex">f(n) = 7n^3 + 100n^2 - 20n + 6</annotation></semantics></math>
+is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mn>3</mn></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Theta(n^3)</annotation></semantics></math>,
+and is
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="normal">Θ</mi><mo stretchy="false" form="prefix">(</mo><msup><mi>n</mi><mi>c</mi></msup><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\Theta(n^c)</annotation></semantics></math>
+only for
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>c</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">c=3</annotation></semantics></math>.</p>
+<p>The logical relationship between the notations is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>∧</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo><mo>⇔</mo><mi mathvariant="normal">Θ</mi><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">
+O(f(n)) \wedge \Omega(f(n)) \iff \Theta(f(n))
+</annotation></semantics></math></p>
+<h2 id="lowercase-asymptotics">lowercase asymptotics</h2>
+<p>The lowercase greek letter is used to indicate a “loose” bound, while
+upper case indicates a “tight” bound.</p>
+<p>For example, for big-O vs little-o notation, compare the two set
+definitions:</p>
+<pre class="math"><code>O(g(n)) = \{ f(n) : 0 \leq f(n) \leq c g(n), \forall n \geq n_0 \}</code></pre>
+<pre class="math"><code>o(g(n)) = \{ f(n) : 0 \leq f(n) &lt; c g(n), \forall n \geq n_0 \}</code></pre>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Name</th>
+<th>Corresponding Operator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>O</td>
+<td>big O</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≤</mo><annotation encoding="application/x-tex">\leq</annotation></semantics></math></td>
+</tr>
+<tr>
+<td>o</td>
+<td>little O</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>&lt;</mo><annotation encoding="application/x-tex">&lt;</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Ω</mi><annotation encoding="application/x-tex">\Omega</annotation></semantics></math></td>
+<td>big omega</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≥</mo><annotation encoding="application/x-tex">\geq</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ω</mi><annotation encoding="application/x-tex">\omega</annotation></semantics></math></td>
+<td>little omega</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>&gt;</mo><annotation encoding="application/x-tex">&gt;</annotation></semantics></math></td>
+</tr>
+<tr>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi mathvariant="normal">Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math></td>
+<td>big theta</td>
+<td><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mo>≈</mo><annotation encoding="application/x-tex">\approx</annotation></semantics></math></td>
+</tr>
+</tbody>
+</table>
+<p>Does “little theta” make sense? Why or why not?</p>
+<h2 id="challenge-questions">Challenge questions</h2>
+<ol type="1">
+<li><p>If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi mathvariant="normal">Θ</mi><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f(n) = \Theta(g(n))</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi mathvariant="normal">Θ</mi><mo stretchy="false" form="prefix">(</mo><mi>h</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(n) = \Theta(h(n))</annotation></semantics></math>,
+then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi mathvariant="normal">Θ</mi><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">h(n) =
+\Theta(f(n))</annotation></semantics></math>. True or false?
+Why?</p></li>
+<li><p>If
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">f(n) = O(g(n))</annotation></semantics></math>
+and
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>g</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi>O</mi><mo stretchy="false" form="prefix">(</mo><mi>h</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">g(n) = O(h(n))</annotation></semantics></math>,
+then
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mi mathvariant="normal">Ω</mi><mo stretchy="false" form="prefix">(</mo><mi>f</mi><mo stretchy="false" form="prefix">(</mo><mi>n</mi><mo stretchy="false" form="postfix">)</mo><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">h(n) = \Omega(f(n))</annotation></semantics></math>.
+True or false? Why?</p></li>
+</ol>
 </body>
 </html>
