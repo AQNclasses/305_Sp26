@@ -151,4 +151,40 @@ the log changes depending on what the input size is divided by in the recursive
 call, but as long as we are **dividing,** we will have a logarithmic number of
 calls on our recursion stack.
 
-### A note on stacks
+So our overall runtime can be found as
+
+```math
+\sum_{i=1}^{\log n} C = C \log n = O(\log n)
+```
+
+So while this algorithm is slower than a constant time multiplication (ie:
+looking up the product in a chart), it's still pretty fast and in fact is faster
+than the "usual" $O(n^2)$ approach to multiplication (if we ignore the cost of
+addition in terms of $n$). In practice, the fastest known algorithm for
+multiplication is $O(n log n)$ for two $n$-digit integers.
+
+### Merge Sort
+
+Merge sort can be defined as
+
+```python
+MergeSort(A[1..n]):
+  if n > 1
+    m = floor(n/2)
+    MergeSort(A[1 ... m])
+    MergeSort(A[m+1 ... n])
+    Merge(A[1..n], m)
+```
+
+where `Merge` is an $O(n)$ operation that interleaves the two sub-lists in the
+correct order.
+
+How would we write the recurrence for this algorithm?
+
+```
+T(n) = n + 2T(n/2)
+```
+
+Draw and solve recurrence tree to find $O(n log n)$.
+
+### Quicksort
