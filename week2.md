@@ -19,3 +19,7 @@ Final nuggets:
 - loop termination algebra
 
 Intro to [recursion](topics/recursion.md).
+
+# Friday
+
+Spent ~10 minutes reviewing runtime and asymptotics; took Quiz 2.

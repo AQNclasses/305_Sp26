@@ -74,6 +74,9 @@ Leads us to guess that $T(n) = 2^n - 1$, which happens to be correct.
 
 ### Example: Peasant Multiplication
 
+Consider the following method for multiplication (traced back to at least 17th
+century BC!):
+
 x*y =
 
 1. 0 if x=0
@@ -98,4 +101,54 @@ else
 
 Recurrence?
 
+T(n,m) = C + T(n/2, 2n)
+
+We have two inputs to the algorithm. However, termination of the algorithm is
+determined entirely by the value of the first input, so we can ignore the
+second, yielding
+
+T(n) = C + T(n/2)
+
+How to solve this recurrence?
+
 ## Recursion trees
+
+Idea: represent "work done" during recursion as a X-ary tree (where X depends on
+the number of recursions.
+
+Each node of the tree should store the work done at that "level" of recursion,
+while edges represent recursive calls.
+
+Then, we can sum the values of all the nodes to get the overall runtime of the
+algorithm.
+
+Consider the example of the multiplication algorithm above. We have one
+recursive call, which divides the input size in half, and we have some constant
+time work at each level of recursion, which we could represent as a unary tree:
+
+C
+|
+C
+|
+C
+|
+....
+
+How many levels are in this tree?
+
+At an arbitrary level i, the input will have size $n/2^i$, since input is
+divided in half each time. We stop when $x=0$, which will only happen when $x=1$
+in the previous step ($1 // 2  = 0$). So we can solve for $i in the equation
+
+```math
+1 = n/(2^i)
+2^i = n
+i = \log_2(n)
+```
+
+to find that the maximum number of levels in our tree is $O(log n)$. The base of
+the log changes depending on what the input size is divided by in the recursive
+call, but as long as we are **dividing,** we will have a logarithmic number of
+calls on our recursion stack.
+
+### A note on stacks
