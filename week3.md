@@ -1,5 +1,5 @@
 # Monday
 
-Learning about [recursion trees](topics/recurrences.md#Recursion Trees).
+Learning about [recursion trees](/topics/recursion.md#recursion-trees).
 
 Start worksheet: "drawing trees", see Canvas (under Files > Worksheets)
