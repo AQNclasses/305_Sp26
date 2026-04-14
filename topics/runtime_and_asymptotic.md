@@ -230,3 +230,39 @@ Does "little theta" make sense? Why or why not?
 
 2. If $f(n) = O(g(n))$ and $g(n) = O(h(n))$, then $h(n) = \Omega(f(n))$. True or
 false? Why?
+
+## Connection to Limits
+
+As we've been hinting at, there are connections between asymptotic notation and
+the definition of a limit. Essentially, we're using the limit
+
+```math
+\lim_{n \to \inf} \frac{f(n)}{g(n)}
+```
+
+to compare a runtime function $f(n)$ to an asymptotic runtime class function
+$g(n)$.
+
+This means tools such as L'Hospital's Rule can be useful for proving properties
+of asymptotics.
+
+For example, if we wish to prove that polynomials grow more slowly than
+exponentials, we want to prove the following for all $\alpha, k > 0$:
+
+```math
+n^k = o((1+\alpha)^n)
+```
+
+Let's examine what happens when we take the limit of the two functions.
+
+```math
+\lim_{n\to\inf} \frac{n^k}{(1+\alpha)^n}
+= \lim_{n\to\inf} (\frac{n}{(1+\alpha)^{n/k}})^k
+= \lim_{n\to\inf} (\frac{n}{(n/k)(1+\alpha)^{(n/k)-1}})^k
+= 0
+```
+
+The final step applies L'Hospital's rule, cancelling out the $n$ on top and
+bottom of the fraction, leaving the exponential term to grow in the denominator.
+This gives a limit of zero, implying that exponentials will dominate polynomials
+in the limit of large $n$.

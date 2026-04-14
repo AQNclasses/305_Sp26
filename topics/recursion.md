@@ -188,3 +188,21 @@ T(n) = n + 2T(n/2)
 Draw and solve recurrence tree to find $O(n log n)$.
 
 ### Quicksort
+
+Quicksort involves choosing a pivot element, dividing the list into values
+larger than and smaller than the pivot, and recursing on each part of the list.
+
+In code:
+
+```python
+QuickSort(A[1..n]):
+  if n > 1:
+    Choose pivot element A[p] # often first or last element
+    r = Partition(A,p) # partitions elements around A[p], returns pivot index after partition
+    QuickSort(A[1 ... r-1])
+    QuickSort(A[r+1 ... n])
+```
+
+How to write recurrence? Depends on how "good" our pivot is.
+
+(Connect to worksheet)
