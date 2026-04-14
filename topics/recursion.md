@@ -138,11 +138,11 @@ How many levels are in this tree?
 
 At an arbitrary level i, the input will have size $n/2^i$, since input is
 divided in half each time. We stop when $x=0$, which will only happen when $x=1$
-in the previous step ($1 // 2  = 0$). So we can solve for $i in the equation
+in the previous step (`1 // 2  = 0`). So we can solve for $i$ in the equation
 
 ```math
-1 = n/(2^i)
-2^i = n
+1 = n/(2^i) \\
+2^i = n \\
 i = \log_2(n)
 ```
 
