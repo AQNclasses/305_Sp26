@@ -142,9 +142,13 @@ in the previous step (`1 // 2  = 0`). So we can solve for $i$ in the equation
 
 ```math
 1 = n/(2^i)
+```
 
+```math
 2^i = n
+```
 
+```math
 i = \log_2(n)
 ```
 
