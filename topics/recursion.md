@@ -163,10 +163,14 @@ So our overall runtime can be found as
 \sum_{i=1}^{\log n} C = C \log n = O(\log n)
 ```
 
+This runtime isn't quite correct, because we assumed addition takes constant
+time. If we're considering the size of the integer as the size of our input,
+then addition should take $O(n)$ time, leading to a more accurate runtime of
+$O(n \log n)$.
+
 So while this algorithm is slower than a constant time multiplication (ie:
 looking up the product in a chart), it's still pretty fast and in fact is faster
-than the "usual" $O(n^2)$ approach to multiplication (if we ignore the cost of
-addition in terms of $n$). In practice, the fastest known algorithm for
+than the "usual" $O(n^2)$ approach to multiplication. In practice, the fastest known algorithm for
 multiplication is $O(n log n)$ for two $n$-digit integers.
 
 ### Merge Sort
