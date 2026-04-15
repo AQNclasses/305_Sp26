@@ -257,12 +257,21 @@ Let's examine what happens when we take the limit of the two functions.
 
 ```math
 \lim_{n\to\inf} \frac{n^k}{(1+\alpha)^n}
-= \lim_{n\to\inf} (\frac{n}{(1+\alpha)^{n/k}})^k
-= \lim_{n\to\inf} (\frac{n}{(n/k)(1+\alpha)^{(n/k)-1}})^k
+```
+
+Applying L'Hospital's rule:
+
+```math
+= \lim_{n\to\inf} \frac{kn^{k-1}}{(1+\alpha)^n \log(1+\alpha)}
+```
+
+If we repeat the application of L'Hopital's rule $k$ times, we obtain
+
+```math
+= \lim_{n\to\inf} \frac{k!}{(1+\alpha)^n (\log^k(1+\alpha)}
 = 0
 ```
 
-The final step applies L'Hospital's rule, cancelling out the $n$ on top and
-bottom of the fraction, leaving the exponential term to grow in the denominator.
+The numerator becomes a constant, while the exponential term remains in the denominator.
 This gives a limit of zero, implying that exponentials will dominate polynomials
 in the limit of large $n$.
