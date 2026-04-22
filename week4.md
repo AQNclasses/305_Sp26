@@ -4,10 +4,10 @@
 
 # Tuesday April 21
 
-- overview of psuedocode best practices
+- overview of [psuedocode best practices](topics/pseudocode.md)
 - return and review Quiz 1 and Quiz 2
 - (if time allows) heapify embodied exercise, and/or start assignment 3
 
 # Wednesday April 22
 
-- linear time sorting
+- start linear time sorting
