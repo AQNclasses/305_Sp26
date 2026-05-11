@@ -102,6 +102,8 @@ E\[X\] = & \sum_{i=1}^{n-1} \sum_{k=1}^{n-i} \frac{2}{k+1} \\
 \end{align\*}
 $$
 
+thus completing the proof of average runtime.
+
 # More small problems
 
 ## Birthday problem
