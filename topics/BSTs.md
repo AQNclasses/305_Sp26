@@ -157,5 +157,12 @@ and we can plug this into our summation to find the expected depth as
 \begin{align*}
 E[depth(x_k)] & = \sum_{i=1}^n \Pr( i \uparrow k ) \\
  & = \sum_{i=1}^{k-1} \frac{1}{k-i+1} + \sum_{i=k+1}^n \frac{1}{i-k+1} \\
+ & = \sum_{j=2}^{k} \frac{1}{j} + \sum_{j=2}^{n-k+1} \frac{1}{j} \\
+ & = (H_k - 1) + (H_{n-k+1} - 1) \\
+ & < \ln k + \ln(n-k+1) - 2 \\
+ & < 2 \ln n - 2 \\
+ & = O(\log n) \\
 \end{align*}
 ```
+
+### Connections to Quicksort?
