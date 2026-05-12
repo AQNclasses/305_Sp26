@@ -145,14 +145,17 @@ Thus, we can write down our probability as
 
 ```math
 \Pr(i \uparrow k) = \frac{[i \neq k]}{|k-i| + 1} = \begin{cases}
-\frac{1}{k-i+1} & \text{if $i < k$} \\
-0 & \text{if $i = k$} \\
-\frac{1}{i-k+1} & \text{if $i > k$} \\
+\frac{1}{k-i+1} & \text{if} i < k \\
+0 & \text{if} i = k \\
+\frac{1}{i-k+1} & \text{if} i > k \\
 \end{cases}
 ```
 
 and we can plug this into our summation to find the expected depth as
 
 ```math
-E[depth(x_k)] = \sum_{i=1}^n \Pr( i \uparrow k )
+\begin{align*}
+E[depth(x_k)] & = \sum_{i=1}^n \Pr( i \uparrow k ) \\
+ & = \sum_{i=1}^{k-1} \frac{1}{k-i+1} + \sum_{i=k+1}^n \frac{1}{i-k+1} \\
+\end{align*}
 ```
