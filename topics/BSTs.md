@@ -112,8 +112,8 @@ another node.
 
 To prove this, we need to prove a small lemma first.
 
-Let $X(i,k)$ be the subset of treap nodes $\{x_i, x_{i+1}, \ldots, $x_k$\}$ if
-$i < k$, or the subset $\{x_k, x_{k+1}, \ldots, $x_i$\}$ if $k < i$,
+Let $X(i,k)$ be the subset of treap nodes ${x_i, x_{i+1}, \ldots, $x_k$}$ if
+$i < k$, or the subset ${x_k, x_{k+1}, \ldots, $x_i$}$ if $k < i$.
 
 **Lemma 1:** For all $i \neq k$, we have $i \uparrow k$ if and only if $x_i$ has
 the smallest priority among all nodes in $X(i,k)$.
