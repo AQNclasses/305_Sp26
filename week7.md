@@ -16,4 +16,4 @@
 
 ## Friday May 15
 
-- Quiz: Binary search trees
+- Quiz: Binary search trees (open note quiz)
