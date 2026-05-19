@@ -12,7 +12,7 @@
 ## Wednesday May 13
 
 - Randomized BSTs and Treaps
-- Skip list
+- (if time) skip lists
 
 ## Friday May 15
 
