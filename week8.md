@@ -6,11 +6,16 @@
 
 ## Tuesday May 19
 
-- Hash tables
+Lecture on [Hash tables](topics/hash_table_analysis.md)
+
 - Chaining
-- Linear Probing
+- Open addressing
+- Hash Table Worksheet
 
 ## Wednesday May 20
 
+Finish up Hash table worksheet
+
+## Friday May 22
+
 - Intro to [amortized analysis](topics/amortized.md)
-- Amortization worksheet
