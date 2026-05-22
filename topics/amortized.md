@@ -76,7 +76,7 @@ $$
 to find
 
 $$
-\sum_{i=0}^{lg n} 2^i = 2^{1 + lg n}-1 = 2 \dot 2^{lg n} - 1 = 2 n - 1.
+\sum_{i=0}^{lg n} 2^i = 2^{1 + lg n}-1 = 2 \cdot 2^{lg n} - 1 = 2 n - 1.
 $$
 
 The result can also be shown inductively.
@@ -109,19 +109,19 @@ We can actually do better!
 
 ## Method one: Summation
 
-- Observe that we don't flip all log(n) bits every time
-- Least significant bit B[0] does flip every time
-- B[1] flips every other time
-- B[2] flips every 4th iteration
-- B[i] flips every $2^i$th iteration
+- Observe that we don't flip all log(n) bits every time the counter increments.
+- Least significant bit B[0] does flip for every increment.
+- B[1] flips every other time we increment
+- B[2] flips every 4th increment
+- B[i] flips every $2^i$ -th increment
 
-Pattern yields the sum:
+To count the number of bit flips to count from zero to an arbitrary $n$, we can use the sum
 
-$$
+```math
 \sum_{i=0}^{lg n} \frac{n}{2^i} < \sum_{i=0}^\infty \frac{n}{2^i} = 2n
-$$
+```
 
-Thus, on average, each call to Increment runs in constant time.
+Thus, on average, each call to Increment runs in constant time (TODO: clarify).
 
 Note this is a different sense of "on average" than we consider with
 randomized algorithms.
