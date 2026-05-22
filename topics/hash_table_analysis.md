@@ -59,4 +59,22 @@ insertion in a chaining hash table takes constant time on average.
 
 ## Linear Probing
 
-TBD
+The full proof of expected runtime of linear and/or quadratic probing schemes
+will be provided as an optional reading.
+
+The intuitive explanation is as follows:
+
+The first "probe" (attempt to insert key into table) always occurs. With
+probability $\alpha$ (the load factor of the table), a collision will occur. The
+probability of two subsequent collisions is $1/\alpha^2$ (and so forth).
+
+The number of probes can then be expressed as
+
+```math
+1 + \alpha + \alpha^2 + \ldots = \sum_{i=0}^{\infty} \alpha^i =
+\frac{1}{1-\alpha}.
+```
+
+This expression is constant, though it approaches infinity as $\alpha$
+approaches 1. Therefore open addressing schemes will take
+constant time to insert keys.
