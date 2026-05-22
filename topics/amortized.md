@@ -148,11 +148,12 @@ a_i = c_i + \phi_i - \phi_{i-1}
 
 Binary counter: define potential $\phi_i$ to be the number of bits with value 1
 
-At step $i$, $c_i$ is number of bits changed from 0 to 1 + bits from 1 to zero. Change in potential is
-number of bits changed from 0 to 1 - bits changed from 1 to zero.
+At step $i$, $c_i$ is equal to (number of bits changed from 0 to 1) + (number
+of bits changed from 1 to 0). The change in potential is equal to
+(number of bits changed from 0 to 1) - (bits changed from 1 to 0).
 
 Amortized cost:
 
-$$
-a_i = c_i + \phi_i - \phi_{i-1} = 2 (bits from 0 to 1)
-$$
+```math
+a_i = c_i + \phi_i - \phi_{i-1} = 2 \times (bits from 0 to 1)
+```
