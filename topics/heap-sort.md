@@ -90,3 +90,14 @@ starting at zero). Given an arbitrary node in the array at index $i$, we can
 access its children and parents in constant time.
 
 Thus, space usage is $O(n)$, and can be highly optimized.
+
+## Build-Max-Heap
+
+We can build a max heap from an array using our heapify algorithm.
+
+```
+BUILD-MAX-HEAP(A)
+    n = A.length
+    for i = floor(n / 2) downto 1
+        MAX-HEAPIFY(A, i)
+```
