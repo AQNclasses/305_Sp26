@@ -130,7 +130,7 @@ randomized algorithms.
 
 Imagine if instead of paying for each bit flip, the "Increment Revenue Service"
 charges us two dollars whenever we set a bit from zero to 1. When we flip the
-same bit back to zero, the IRS pays us back a dollar.
+same bit back to zero, we don't have to pay, we just deduct from our extra "credit" with the IRS.
 
 So amortized cost of increment is just 2, since only one bit is flipped each
 time.
